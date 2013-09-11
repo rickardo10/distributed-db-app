@@ -138,7 +138,7 @@ def application(environ, start_response):
     Welcome to Python-3.3 running on OpenShift
   </h1>
   <p>
-    This is a sample WSGI application running on Python 3.3
+    This is a sample WSGI application running on Python 6
   </p>
   <p>
     In order to commit to your new project, go to your projects git repo (created with the rhc app create command).  Make your changes, then run:
