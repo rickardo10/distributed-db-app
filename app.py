@@ -1,6 +1,6 @@
 import cherrypy
 from cherrypy import wsgiserver
-import OPENSHIFT_PYTHON_IP
+import os
 
 def application( environ, start_response ):
 	status = '200 OK'
