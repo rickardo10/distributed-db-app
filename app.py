@@ -13,6 +13,7 @@ class Root():
 if __name__ == '__main__':
 	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	root = Root()
 	server = wsgiserver.CherryPyWSGIServer( ( ip, port ), 
 		root.application, server_name = 'www.cherrypy.example')
 	server.start()
