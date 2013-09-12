@@ -12,9 +12,12 @@ class Root:
 		return "Primer Intento"
 
 if __name__ == '__main__':
+   port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	conf = {{'server.socket_host': ip, 'server.socket_port': port}}
+	cherrypy.config.update(conf)
 	conf = { '/': { 'tools.wsgiapp.on': True,
 						 'tools.wsgiapp.app': application,
 						 'tools.gzip.on': True}}
 	cherrypy.tree.mount(Root(), '/', config = conf )
-	cherrypy.server.quickstart()
 	cherrypy.engine.start()
