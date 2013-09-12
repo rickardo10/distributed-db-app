@@ -4,8 +4,6 @@ import os
 
 def application( environ, start_response ):
 	status = '200 OK'
-	response_headers = [ ('Content-type', 'text/plain')]
-	start_response( status, response_headers )
 	body = """
 	<html>
 		<body>
@@ -13,6 +11,8 @@ def application( environ, start_response ):
 		</body>
 	</html>
 	"""
+	response_headers = [ ('Content-type', 'text/html')]
+	start_response( status, response_headers )
 	return [body]
 
 def set( self ):
