@@ -1,4 +1,5 @@
 from cherrypy import wsgiserver
+import os
 
 def my_crazy_app(environ, start_response):
     status = '200 OK'
