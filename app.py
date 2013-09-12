@@ -23,7 +23,7 @@ if __name__ == '__main__':
   app = TransLogger( application )
   conf = { '/': {'tools.wsgiapp.on': True,
             'tools.wsgiapp.app': app,
-            'tools.gzipon': True}}
+            'tools.gzipon': True} }
   run_cherrypy_server( app, ip, port )
 
 
