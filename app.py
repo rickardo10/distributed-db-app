@@ -1,6 +1,6 @@
 import cherrypy
 from cherrypy import wsgiserver
-import os
+import OPENSHIFT_PYTHON_IP
 
 def application( environ, start_response ):
 	status = '200 OK'
@@ -12,7 +12,6 @@ def application( environ, start_response ):
 if __name__ == '__main__':
 	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	root = Root()
 	server = wsgiserver.CherryPyWSGIServer( ( ip, port ), 
 		application, server_name = 'www.cherrypy.example')
 	server.start()
