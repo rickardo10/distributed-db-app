@@ -8,6 +8,7 @@ class Root(object):
 if __name__ == '__main__':
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
    port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
 	cherrypy.config.update(http_conf)
