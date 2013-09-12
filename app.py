@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from paste.translogger import Translogger
-
 def application( environ, start_response ):
   status = '200 OK'
   response_headers = [('Content-type', 'text/plain')]
@@ -20,9 +18,8 @@ class Root:
 if __name__ == '__main__':
   ip   = os.environ['OPENSHIFT_PYTHON_IP']
   port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-  app = TransLogger( application )
   conf = { '/': {'tools.wsgiapp.on': True,
-            'tools.wsgiapp.app': app,
+            'tools.wsgiapp.app': application,
             'tools.gzipon': True} }
   run_cherrypy_server( app, ip, port )
 
