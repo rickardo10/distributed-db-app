@@ -3,7 +3,7 @@ import cherrypy
 class Root(object):
 	def index(self):
 		return "Hello World"
-	main.expose = True
+	index.expose = True
 
 if __name__ == '__main__':
 	http_conf = {'global': {'server.socket_port': port,
