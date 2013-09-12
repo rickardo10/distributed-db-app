@@ -13,5 +13,4 @@ if __name__ == '__main__':
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
 	cherrypy.config.update(http_conf)
-	cherrypy.tree.mount(Root(), '/')
-	cherrypy.engine.start()
+	cherrypy.quickstart(Root())
