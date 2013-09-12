@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from paste.translogger import Translogger
 
 def application( environ, start_response ):
