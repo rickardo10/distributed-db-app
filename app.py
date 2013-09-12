@@ -3,6 +3,7 @@
 import cherrypy
 import database as db
 import datetime
+import os
 
 _header = """
 <html>
