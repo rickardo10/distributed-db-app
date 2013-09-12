@@ -4,7 +4,7 @@ import os
 class Root(object):
 	def index(self):
 		return "Hello World"
-	index.expose = True
+	index.exposed = True
 
 if __name__ == '__main__':
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
