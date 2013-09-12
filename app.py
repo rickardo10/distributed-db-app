@@ -25,4 +25,4 @@ if __name__ == '__main__':
 	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	server = wsgiserver.CherryPyWSGIServer( ( ip, port ), 
 		d, server_name = 'www.cherrypy.example')
-	server_namer.start()
+	server.start()
