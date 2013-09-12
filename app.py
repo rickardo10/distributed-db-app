@@ -1,4 +1,5 @@
 import cherrypy
+from cherrypy import wsgiserver
 import os
 
 class Root():
@@ -12,6 +13,6 @@ class Root():
 if __name__ == '__main__':
 	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	server = cherrypy.wsgiserver.CherryPyWSGIServer( ( ip, port ), 
+	server = wsgiserver.CherryPyWSGIServer( ( ip, port ), 
 		root.application, server_name = 'www.cherrypy.example')
 	server.start()
