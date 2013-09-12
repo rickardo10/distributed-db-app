@@ -18,7 +18,7 @@ def application( environ, start_response ):
 def set( self ):
 	return ["prueba superada"]
 
-d = wsgiserver.WSGIPathInfoDispatcher({'/': my_crazy_app, '/set': set})
+d = wsgiserver.WSGIPathInfoDispatcher({'/': application, '/set': set})
 
 if __name__ == '__main__':
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
