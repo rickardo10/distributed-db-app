@@ -18,11 +18,11 @@ def application( environ, start_response ):
 def set( self ):
 	return ["prueba superada"]
 
-d = WSGIPathInfoDispatcher({'/': my_crazy_app, '/set': set})
+d = wsgiserver.WSGIPathInfoDispatcher({'/': my_crazy_app, '/set': set})
 
 if __name__ == '__main__':
 	ip   = os.environ['OPENSHIFT_PYTHON_IP']
 	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	server = wsgiserver.CherryPyWSGIServer( ( ip, port ), 
 		d, server_name = 'www.cherrypy.example')
-	server.start()
+	server_namer.start()
