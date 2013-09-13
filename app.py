@@ -125,7 +125,7 @@ _asignar = """
         	<dt><label for="prioridad">Prioridad:</label></dt>
             <dd><input type="radio" name = "prioridad" value = "1"> Alta</dd>
         		<dd><input type="radio" name = "prioridad" value = "2"> Media</dd>
-       		<dd><input type="radio" name = "prioridad" value = "2"> Baja</dd>
+       		<dd><input type="radio" name = "prioridad" value = "3"> Baja</dd>
         </dl>
         <dl>
         	<input type="submit" value="Guardar">
@@ -177,7 +177,7 @@ class HelloWorld(object):
 		
 		# Creates a list with all reasearchers
 		for x in investigadores:
-			_inv = _inv + """<option value = %d>%s</option>""" % ( database.getId( "investigador", x), x ) 
+			_inv = _inv + """<option value = %d>%s</option>\n""" % ( database.getId( "investigador", x), x ) 
 
 		return [ _header, _asignar1 % (_inv ), _footer ]
 	asignarTarea.exposed = True
@@ -192,11 +192,11 @@ class HelloWorld(object):
 		
 		# Creates a list with all the assistants
 		for x in asistentes:
-			_asist = _asist + """<dd><input type="radio" name = "asistente" value = "%d"> %s</dd>""" % ( database.getId( "asistente", x), x ) 
+			_asist = _asist + """<dd><input type="radio" name = "asistente" value = "%d"> %s</dd>\n""" % ( database.getId( "asistente", x), x ) 
 		
 		# Creates a list with all reasearchers
 		for x in proyectos:
-			_proy = _proy + """<option value = %d>%s</option>""" % ( database.getIdWP(x), x ) 
+			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 
 
 		return [ _header, _asignar % (_proy, _asist), _footer ]
 	asignarTarea2.exposed = True
@@ -339,12 +339,12 @@ class HelloWorld(object):
 
 # Starts the webpage
 if __name__ == '__main__':
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	
-	http_conf = {'global': {'server.socket_port': port,
-									'server.socket_host': ip}}
-	cherrypy.config.update(http_conf)
+	#http_conf = {'global': {'server.socket_port': port,
+	#								'server.socket_host': ip}}
+	#cherrypy.config.update(http_conf)
 	cherrypy.quickstart( HelloWorld() )
 
 #=========================================================================================
