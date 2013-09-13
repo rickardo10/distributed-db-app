@@ -10,99 +10,79 @@ _header = """
 <head>
 <title>Investigador</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" media="all" href="niceforms-default.css" />
+<link rel="stylesheet" type="text/css" media="all" href="style.css" />
+<script type="application/javascript" src="some.js"></script>
 </head>
-<body><div id="container">
-"""
-
-_footer = """
-<p id="footer"><br />&copy;Ricardo Ocampo<br />Last update: 10 Septiembre 2013</p>
-</div></body>
-</html>
-"""
-
-_index = """
-<ul>
-	<li>
-		<a href = "/investigador">Investigador</a>
-	</li>
-	<li>
-		<a href = "/asistente">Asistente</a>
-	</li>
-	<li>
-		<a href = "/asignarTarea">Asignar tarea</a>
-	</li>
-	<li>
-		<a href = "/workingPaper">Working Paper</a>
-	</li>
-		<li>
-		<a href = "/asiglist">Lista de Asignaciones</a>
-	</li>
-</ul>
+<body>
+	<div>
+		<a href="/" class="pure-menu-heading">Menu</a>
+		<ul>
+			<li><a href = "/investigador">Investigador</a></li>
+			<li><a href = "/asistente">Asistente</a></li>
+			<li><a href = "/asignarTarea">Asignar tarea</a></li>
+			<li><a href = "/workingPaper">Working Paper</a></li>
+			<li><a href = "/asiglist">Lista de Asignaciones</a></li>
+		</ul>
+	</div>
+	<div id = "signup-form">
+		<div id = "signup-form-inner">
+			<div class="clearfix" id="header">
+				<h1>Investigador</h1>
+			</div>
+			<p>Por favor complete cada uno de los campos, asegurandose de
+			utilizar un email correcto ya que se le enviará un código de 
+			validación.</p>
 """
 
 _investigador = """
-<form action="saveAuthor" method="post" class="body">
-	<fieldset>
-    	<legend>Investigador</legend>
-        <dl>
-        	<dt><label for="nombre">Nombre:</label></dt>
-            <dd><input type="text" name="nombre" id="nombre" size="32" maxlength="128" /></dd>
-        </dl>
-        <dl>
-        	<dt><label for="email">E-mail:</label></dt>
-            <dd><input type="text" name="email" id="email" size="32" maxlength="32" /></dd>
-        </dl>
-        <dl>
-        	<input type="submit" value="Guardar">
-        </dl>
-    </fieldset>
-</form>
+			<form id="send" action="saveAuthor" method="post">
+				<p>
+					<label for="nombre">Nombre:</label>
+					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder="Nombre"/>
+				</p>
+				<p>
+					<label for="email">E-mail:</label>
+					<input type="text" name="email" id="email" maxlength="32" placeholder="E-mail"/>
+				</p>
+				<p>
+					<button id="submit" type="submit">Guardar</button>
+				</p>
+			</form>
 """
 
 _asistente = """
-<form action="saveAsistente" method="post" class="niceform">
-	<fieldset>
-    	<legend>Asistente</legend>
-        <dl>
-        	<dt><label for="nombre">Nombre:</label></dt>
-            <dd><input type="text" name="nombre" id="nombre" size="32" maxlength="128" /></dd>
-        </dl>
-        <dl>
-        	<dt><label for="email">E-mail:</label></dt>
-            <dd><input type="text" name="email" id="email" size="32" maxlength="32" /></dd>
-        </dl>
-        <dl>
-        	<dt><label for="telefono">Telefono:</label></dt>
-            <dd><input type="text" name="telefono" id="telefono" size="32" maxlength="32" /></dd>
-        </dl>
-        <dl>
-        	<input type="submit" value="Guardar">
-        </dl>
-    </fieldset>
-</form>
+			<form id="send" action="saveAsistente" method="post">
+				<p>
+					<label for="nombre">Nombre:</label>
+					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder="Nombre"/>
+				</p>
+				<p>
+					<label for="email">E-mail:</label>
+					<input type="text" name="email" id="email" maxlength="32" placeholder="E-mail"/>
+				</p>
+				<p>
+					<label for="telefono">Teléfono:</label>
+					<input type="text" name="telefono" id="telefono" maxlength="32" placeholder="Teléfono"/>
+				</p>
+				<p>
+					<button id="submit" type="submit">Guardar</button>
+				</p>
+			</form>
 """
 
 _asignar1 = """
-<form action="asignarTarea2" method="post" class="niceform">
-	<fieldset>
-    	<legend>Asignación de tarea</legend>
-        <dl>
-        	<dt><label for="asignador">Asignado por:</label></dt>
-        		<dd><select name = "investigador" >
-        			<option selected>---Investigador---</option>
-        			%s
-        		</dd></select>
-        </dl>
-        <dl>
-        <dl>
-        	<input type="submit" value="Siguiente">
-        </dl>
+<form action="asignarTarea2" method="post" class="pure-form pure-form-stacked">
+<label for="asignador">Asignado por:</label>
+<select name = "investigador" onchange = "hola">
+<option selected>-Investigador-</option>
+%s
+</select>
+<input type="submit" value="Siguiente" class="pure-button pure-button-primary">
 </form>
 """
 
 _asignar = """
-<form action="tareaAsignada" method="post" class="niceform">
+<form action="tareaAsignada" method="post" class="pure-form pure-form-stacked">
         <dl>
         	<dt><label for="asignador">Proyecto:</label></dt>
         		<dd><select name = "workingpaper" >
@@ -125,13 +105,23 @@ _asignar = """
        		<dd><input type="radio" name = "prioridad" value = "3"> Baja</dd>
         </dl>
         <dl>
-        	<input type="submit" value="Guardar">
+        	<input type="submit" value="Guardar" class="pure-button pure-button-primary">
         </dl>
 </form>
 """
 
+_footer = """
+		<div id="required">
+			<p>&copy;Autor: Ricardo Ocampo<br/>
+			Last update: 13 Septiembre 2013</p>
+		</div>
+	</div>
+</body>
+</html>
+"""
+
 _wp = """
-<form action="saveWorkingPaper" method="post" class="niceform">
+<form action="saveWorkingPaper" method="post" class="pure-form pure-form-stacked">
 	<fieldset>
     	<legend>Working Papers</legend>
         <dl>
@@ -143,7 +133,7 @@ _wp = """
             %s
         </dl>
         <dl>
-        	<input type="submit" value="Guardar">
+        	<input type="submit" value="Guardar" class="pure-button pure-button-primary"> 
         </dl>
     </fieldset>
 </form>
@@ -152,7 +142,7 @@ _wp = """
 class HelloWorld(object):
 	# Main page
 	def index( self ):
-		return [ _header, _index, _footer ]
+		return [ _header, _footer ]
 	index.exposed = True
 
 	# Researchers page
@@ -195,7 +185,7 @@ class HelloWorld(object):
 			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 
 
 		_investigador = """
-			<fieldset>
+			<fieldset class = pure-form pure-form-stacked>
 		    	<legend>Asignación de tarea</legend>
 		        <dl>
 		        	<dt><label for="asignador">Asignado por:</label></dt>
@@ -289,33 +279,28 @@ class HelloWorld(object):
 
 	# Displays the list of assignments
 	def asiglist( self ):
-		_header = """
-		<html>
-		<head>
-		<title>Lista de tareas</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" type="text/css" media="all" href="niceforms-default.css" />
-		</head>
-		"""
-
 		_body = """
 		<body>
 			<h1>Lista de Asignaciones</h1>
-			<table border = "1" width = "1100" >
-				<tr>
-					<th>Autor</th>
-					<th>Working Paper</th>
-					<th>Asignado</th>
-					<th>Descripción</th>
-					<th>Estado</th>
-					<th>Prioridad</th>
-					<th>Avance</th>
-					<th>Fecha de Inicio</th>
-					<th>Fecha de Culminación</th>
-					<th>Comentarios</th>
-					<th>Editar</th>
-				</tr>
+			<table class="pure-table">
+				<thead>
+					<tr>
+						<th>Autor</th>
+						<th>Working Paper</th>
+						<th>Asignado</th>
+						<th>Descripción</th>
+						<th>Estado</th>
+						<th>Prioridad</th>
+						<th>Avance</th>
+						<th>Fecha de Inicio</th>
+						<th>Fecha de Culminación</th>
+						<th>Comentarios</th>
+						<th>Editar</th>
+					</tr>
+				</thead>
+				<tbody>
 			%s
+				</tbody>
 			</table>
 		"""
 
@@ -323,9 +308,6 @@ class HelloWorld(object):
 		<td>%s</td> 
 		"""
 
-		_rowEven = """
-		<tr class = "even" >%s</tr>
-		"""
 		database = db.database( "basedatosCAP.db" )
 
 
@@ -336,9 +318,14 @@ class HelloWorld(object):
 		asignaciones = asignaciones1 + asignaciones2 + asignaciones3 + asignaciones4
 
 		rows = ""
+		counter = 1
 		for x in asignaciones:
 			data = database.getDataFromAsigId( x )[ 0 ]
-			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button>Borrar</button></form>' ) % ( x ) + "</tr>"
+			if counter % 2 == 0:
+				rows = rows + "<tr class = 'pure-table-odd'>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button>Borrar</button></form>' ) % ( x ) + "</tr>"
+			else:
+				rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button>Borrar</button></form>' ) % ( x ) + "</tr>"
+			counter += 1
 
 		return [_header, _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
@@ -352,16 +339,16 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	
-	http_conf = {'global': {'server.socket_port': port,
-									'server.socket_host': ip}}
-	cherrypy.config.update(http_conf)
+	#http_conf = {'global': {'server.socket_port': port,
+	#								'server.socket_host': ip}}
+	#cherrypy.config.update(http_conf)
 
-	conf = {'/niceforms-default.css':{'tools.staticfile.on':True, 
-			  									 'tools.staticfile.filename':current_dir+"/niceforms-default.css"
-			  									 }}
+	conf = {'/style.css':{'tools.staticfile.on':True, 
+			  					 'tools.staticfile.filename':current_dir+"/style.css"
+			  					}}
 	
 
 	cherrypy.quickstart( HelloWorld(), "/", config = conf )
