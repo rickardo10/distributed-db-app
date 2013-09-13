@@ -42,7 +42,7 @@ _index = """
 """
 
 _investigador = """
-<form action="saveAuthor" method="post" class="niceform">
+<form action="saveAuthor" method="post" class="body">
 	<fieldset>
     	<legend>Investigador</legend>
         <dl>
@@ -98,14 +98,11 @@ _asignar1 = """
         <dl>
         	<input type="submit" value="Siguiente">
         </dl>
-    </fieldset>
 </form>
 """
 
 _asignar = """
 <form action="tareaAsignada" method="post" class="niceform">
-	<fieldset>
-    	<legend>Asignación de tarea</legend>
         <dl>
         	<dt><label for="asignador">Proyecto:</label></dt>
         		<dd><select name = "workingpaper" >
@@ -130,7 +127,6 @@ _asignar = """
         <dl>
         	<input type="submit" value="Guardar">
         </dl>
-    </fieldset>
 </form>
 """
 
@@ -198,7 +194,20 @@ class HelloWorld(object):
 		for x in proyectos:
 			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 
 
-		return [ _header, _asignar % (_proy, _asist), _footer ]
+		_investigador = """
+			<fieldset>
+		    	<legend>Asignación de tarea</legend>
+		        <dl>
+		        	<dt><label for="asignador">Asignado por:</label></dt>
+		        		<dd><select name = "investigador" >
+		        			<option selected>%s</option>
+		        		</dd></select>
+		        </dl>
+		        <dl>
+			</form>
+			"""
+		database.getName("investigador", investigador)
+		return [ _header, _investigador % (database.getName("investigador", investigador)) ,_asignar % (_proy, _asist), _footer ]
 	asignarTarea2.exposed = True
 
 	# Working papers page
@@ -232,6 +241,9 @@ class HelloWorld(object):
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )
+		asistentes = database.getNames("asistente")
+		if nombre in asistentes:
+			return [_header, _asistente, "El asistente ya existe" , _footer] 
 
 		# Inserts a row with the new assistant
 		query = "insert into asistente(nombre, email, telefono) values ( '%s', '%s', '%s' )" % ( nombre, email, telefono )
@@ -339,13 +351,20 @@ class HelloWorld(object):
 
 # Starts the webpage
 if __name__ == '__main__':
+	current_dir = os.path.dirname( os.path.abspath(__file__) )
 	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
 	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	
 	#http_conf = {'global': {'server.socket_port': port,
 	#								'server.socket_host': ip}}
 	#cherrypy.config.update(http_conf)
-	cherrypy.quickstart( HelloWorld() )
+
+	conf = {'/niceforms-default.css':{'tools.staticfile.on':True, 
+			  									 'tools.staticfile.filename':current_dir+"/niceforms-default.css"
+			  									 }}
+	
+
+	cherrypy.quickstart( HelloWorld(), "/", config = conf )
 
 #=========================================================================================
 

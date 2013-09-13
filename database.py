@@ -11,8 +11,9 @@ class database:
 		self.con.commit()
 
 	def insertData( self, query ):
-		self.con.execute( query )
+		result = self.con.execute( query )
 		self.con.commit()
+		return result
 
 	def getNames( self, table ):
 		name = self.con.execute( "select nombre from %s" % (table) )
@@ -22,6 +23,10 @@ class database:
 		id = self.con.execute( "select rowid from %s where nombre = '%s'" % ( table, name ) )
 		id = id.fetchone()[0]
 		return id
+
+	def getName( self, table, name ):
+		name = self.insertData( "select nombre from %s where rowid = %s" % ( table, name ) )
+		return name.fetchone()[0]
 
 	def getIdWP( self, name ):
 		id = self.con.execute( "select rowid from workingpaper where nombrewp = '%s'" % ( name ) )
@@ -64,4 +69,5 @@ class database:
 
 	def deleteRow( self, asigId ):
 		self.con.execute( "delete from asignaciones where rowid = %d" % ( asigId ) )
+		self.con.execute( "delete from linkasignaciones where asigid = %d" % (asigId) )
 		self.con.commit()
