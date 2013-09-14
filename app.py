@@ -219,7 +219,7 @@ class HelloWorld(object):
 		# Inserts a row with the new assistant
 		query = "insert into asistente(nombre, email, telefono) values ( '%s', '%s', '%s' )" % ( nombre, email, telefono )
 		results = database.insertData( query )
-		return [ _header, _salvado, _footer ]
+		return [ _header % (""), _salvado, _footer ]
 	guardarinvestigador.exposed = True
 
 	# Page that pops when a task is succesfully assinged
@@ -255,7 +255,7 @@ class HelloWorld(object):
 		results = database.insertData( query )
 		query1 = "insert into linkworkingpaper( invid, wpid ) values ( %d, %d )" % ( int( investigador ), database.getIdWP( nombre ))
 		results1 = database.insertData( query1 )
-		return [ _header, _salvado, _footer ]
+		return [ _header % (""), _salvado, _footer ]
 	guardarwp.exposed = True
 
 	# Displays the list of assignments
