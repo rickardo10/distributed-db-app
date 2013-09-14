@@ -20,7 +20,7 @@ _header = """
 			<li><a href = "/investigador">Investigador</a></li>
 			<li><a href = "/asistente">Asistente</a></li>
 			<li><a href = "/asignartarea">Asignar tarea</a></li>
-			<li><a href = "/workingPaper">Working Paper</a></li>
+			<li><a href = "/workingpaper">Working Paper</a></li>
 			<li><a href = "/asiglist">Lista de Asignaciones</a></li>
 		</ul>
 	</div>
@@ -45,7 +45,7 @@ _investigador = """
 					<input type="text" name="email" id="email" maxlength="32" placeholder="E-mail"/>
 				</p>
 				<p>
-					<button id="submit" type="submit">Guardar</button>
+					<button class="btn btn-primary" type="submit">Guardar</button>
 				</p>
 			</form>
 """
@@ -65,7 +65,7 @@ _asistente = """
 					<input type="text" name="telefono" id="telefono" maxlength="32" placeholder="Teléfono"/>
 				</p>
 				<p>
-					<button id="submit" type="submit">Guardar</button>
+					<button class="btn btn-primary" type="submit">Guardar</button>
 				</p>
 			</form>
 """
@@ -104,19 +104,27 @@ _asignar = """
 	       	</select>
         	</p>
         	<p>
-        		<button id="submit" type="submit">Guardar</button>
+        		<button class="btn btn-primary" type="submit">Guardar</button>
 			</p>
 			</form>
 """
 
 _wp = """
-<form action="saveWorkingPaper" method="post">
-<label for="workingpaper">Nombre del proyecto:</label>
-<input type="text" name="nombre" id="nombre" maxlength="128"/>
-<label for="autor">Autor del proyecto:</label>
-%s
-<input type="submit" value="Guardar"> 
-</form>
+			<form action="saveWorkingPaper" method="post">
+				<p>
+					<label for="workingpaper">Nombre del proyecto:</label>
+					<input type="text" name="nombre" id="nombre" maxlength="128"/>
+				</p>
+				<p>
+					<label for="autor">Autor del proyecto:</label>
+					<select name = "investigador">
+					%s
+					</select>
+				</p>
+				<p>
+					<button class="btn btn-primary" type="submit">Guardar</button> 
+				<p>
+				</form>
 """
 
 _footer = """
@@ -176,15 +184,15 @@ class HelloWorld(object):
 	asignartarea.exposed = True
 
 	# Working papers page
-	def workingPaper( self ):
+	def workingpaper( self ):
 		database = db.database( "basedatosCAP.db" )
 		investigadores = database.getNames( "investigador" )
 		_inv = ""
 		for x in investigadores:
-			_inv = _inv + """<dd><input type="radio" name = "investigador" value = "%d"> %s</dd>""" % ( database.getId( "investigador", x), x ) 
+			_inv = _inv + """<option value = "%d"> %s</option>""" % ( database.getId( "investigador", x), x ) 
 		
 		return [_header, _wp % _inv, _footer ]
-	workingPaper.exposed = True
+	workingpaper.exposed = True
 
 	# Page that pops when a researcher is succesfully saved
 	def saveAuthor( self, nombre, email ):
@@ -256,8 +264,7 @@ class HelloWorld(object):
 	def asiglist( self ):
 		_body = """
 		<body>
-			<h1>Lista de Asignaciones</h1>
-			<table class="pure-table">
+			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th>Autor</th>
@@ -296,11 +303,7 @@ class HelloWorld(object):
 		counter = 1
 		for x in asignaciones:
 			data = database.getDataFromAsigId( x )[ 0 ]
-			if counter % 2 == 0:
-				rows = rows + "<tr class = 'pure-table-odd'>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button>Borrar</button></form>' ) % ( x ) + "</tr>"
-			else:
-				rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button>Borrar</button></form>' ) % ( x ) + "</tr>"
-			counter += 1
+			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button class="btn btn-primary">Borrar</button></form>' ) % ( x ) + "</tr>"
 
 		return [_header, _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
