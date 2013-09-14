@@ -316,12 +316,12 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	
-	#http_conf = {'global': {'server.socket_port': port,
-	#								'server.socket_host': ip}}
-	#cherrypy.config.update(http_conf)
+	http_conf = {'global': {'server.socket_port': port,
+									'server.socket_host': ip}}
+	cherrypy.config.update(http_conf)
 
 	conf = {'/style.css':{'tools.staticfile.on':True, 
 			  					 'tools.staticfile.filename':current_dir+"/style.css"},
