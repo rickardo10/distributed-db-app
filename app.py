@@ -71,11 +71,10 @@ _asistente = """
 """
 
 _asignar = """
-			<form id="asignacion" action="tareaAsignada" method="post" >
+			<form id="asignacion" action="tareaAsignada" method="post" class="pure-form" >
 				<p>
 					<label for="asignador">Asignado por:</label>
 					<select name = "investigador" id = "invest" onchange="onChangeSetVar()">
-					<option selected>-Investigador-</option>
 					%s
 					</select>
 				</p>
@@ -152,19 +151,23 @@ class HelloWorld(object):
 	asistente.exposed = True
 
 	# Tasking
-	def asignartarea( self ):
+	def asignartarea( self, investigador = "0" ):
 		database = db.database( "basedatosCAP.db" )
 		investigadores = database.getNames( "investigador" )
 		asistentes = database.getNames( "asistente" )
-		proyectos = database.getWorkingPapers( 1 )
+		proyectos = database.getWorkingPapers( int(investigador) )
 
 		_asist = ""
 		_proy = ""
 		_inv = ""
 		
 		# Creates a list with all reasearchers
+		if investigador != "0":
+			_inv = "<option value = %d>%s</option>\n" % ( int(investigador), database.getName( "investigador", int(investigador) ) )
+
 		for x in investigadores:
-			_inv = _inv + """<option value = %d>%s</option>\n""" % ( database.getId( "investigador", x), x ) 
+			if database.getId("investigador", x) != int(investigador):
+				_inv = _inv + """<option value = %d>%s</option>\n""" % ( database.getId( "investigador", x), x ) 
 
 		# Creates a list with all the assistants
 		for x in asistentes:
@@ -172,9 +175,9 @@ class HelloWorld(object):
 		
 		# Creates a list with all reasearchers
 		for x in proyectos:
-			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 
+			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 	
 
-		return [ _header, _asignar % (_inv, _proy, _asist ), _footer ]
+		return [ _header, _asignar % (_inv, _proy, _asist ), _footer, str(investigador) ]
 	asignartarea.exposed = True
 
 	# Working papers page
@@ -219,7 +222,7 @@ class HelloWorld(object):
 	saveAsistente.exposed = True
 
 	# Page that pops when a task is succesfully assinged
-	def tareaAsignada( self, workingpaper, asistente, prioridad, descripcion ):
+	def tareaAsignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
 		_salvado = """
 			<p>Tarea correctamente asignada<p>
 			<p> <a href = "/">Regresar</a>
@@ -276,7 +279,7 @@ class HelloWorld(object):
 					</tr>
 				</thead>
 				<tbody>
-			%s
+					%s
 				</tbody>
 			</table>
 		"""
@@ -316,12 +319,12 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	
-	http_conf = {'global': {'server.socket_port': port,
-									'server.socket_host': ip}}
-	cherrypy.config.update(http_conf)
+	#http_conf = {'global': {'server.socket_port': port,
+	#								'server.socket_host': ip}}
+	#cherrypy.config.update(http_conf)
 
 	conf = {'/style.css':{'tools.staticfile.on':True, 
 			  					 'tools.staticfile.filename':current_dir+"/style.css"},
