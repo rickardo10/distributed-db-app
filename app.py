@@ -19,7 +19,7 @@ _header = """
 		<ul>
 			<li><a href = "/investigador">Investigador</a></li>
 			<li><a href = "/asistente">Asistente</a></li>
-			<li><a href = "/asignarTarea">Asignar tarea</a></li>
+			<li><a href = "/asignartarea">Asignar tarea</a></li>
 			<li><a href = "/workingPaper">Working Paper</a></li>
 			<li><a href = "/asiglist">Lista de Asignaciones</a></li>
 		</ul>
@@ -70,44 +70,40 @@ _asistente = """
 			</form>
 """
 
-_asignar1 = """
-<form action="asignarTarea2" method="post" class="pure-form pure-form-stacked">
-<label for="asignador">Asignado por:</label>
-<select name = "investigador" onchange = "hola">
-<option selected>-Investigador-</option>
-%s
-</select>
-<input type="submit" value="Siguiente" class="pure-button pure-button-primary">
-</form>
-"""
-
 _asignar = """
-<form action="tareaAsignada" method="post" class="pure-form pure-form-stacked">
-        <dl>
-        	<dt><label for="asignador">Proyecto:</label></dt>
-        		<dd><select name = "workingpaper" >
-        			<option selected>---Working Paper---</option>
-        			%s
-        		</dd></select>
-        </dl>
-        <dl>
-        	<dt><label for="asignacion">Asignar a:</label></dt> 
-        		%s
-        </dl>
-        <dl>
-        	<dt><label for="descripcion">Descripción de la Asignación:</label></dt>
-            <dd><input type="text" name="descripcion" id="descripcion" size="32" maxlength="200" /></dd>
-        </dl>
-        <dl>
-        	<dt><label for="prioridad">Prioridad:</label></dt>
-            <dd><input type="radio" name = "prioridad" value = "1"> Alta</dd>
-        		<dd><input type="radio" name = "prioridad" value = "2"> Media</dd>
-       		<dd><input type="radio" name = "prioridad" value = "3"> Baja</dd>
-        </dl>
-        <dl>
-        	<input type="submit" value="Guardar" class="pure-button pure-button-primary">
-        </dl>
-</form>
+			<form id="asignacion" action="tareaAsignada" method="post" >
+				<p>
+					<label for="asignador">Asignado por:</label>
+					<select name = "investigador" id = "invest" onchange="onChangeSetVar()">
+					<option selected>-Investigador-</option>
+					%s
+					</select>
+				</p>
+			<p>
+	        	<label for="asignador">Proyecto:</label>
+	        	<select name = "workingpaper" >
+		        	<option selected>-Working Paper-</option>
+		        	%s
+	        	</select>
+         </p>
+         <p>
+	         <label for="asignacion">Asignar a:</label>
+	        	%s
+        	</p>
+        	<p>
+	        	<label for="descripcion">Descripción de la Asignación:</label></dt>
+	         <input type="text" name="descripcion" id="descripcion" size="32" maxlength="200"/>
+        	</p>
+        	<p>
+	        	<label for="prioridad">Prioridad:</label>
+	         <input type="radio" name = "prioridad" value = "1">Alta<br>
+	        	<input type="radio" name = "prioridad" value = "2">Media<br>
+	       	<input type="radio" name = "prioridad" value = "3">Baja
+        	</p>
+        	<p>
+        		<input type="submit" value="Guardar" class="pure-button pure-button-primary">
+			</p>
+			</form>
 """
 
 _footer = """
@@ -156,26 +152,20 @@ class HelloWorld(object):
 	asistente.exposed = True
 
 	# Tasking
-	def asignarTarea( self ):
+	def asignartarea( self ):
 		database = db.database( "basedatosCAP.db" )
 		investigadores = database.getNames( "investigador" )
+		asistentes = database.getNames( "asistente" )
+		proyectos = database.getWorkingPapers( 1 )
+
+		_asist = ""
+		_proy = ""
 		_inv = ""
 		
 		# Creates a list with all reasearchers
 		for x in investigadores:
 			_inv = _inv + """<option value = %d>%s</option>\n""" % ( database.getId( "investigador", x), x ) 
 
-		return [ _header, _asignar1 % (_inv ), _footer ]
-	asignarTarea.exposed = True
-
-	# Tasking 2
-	def asignarTarea2( self, investigador ):
-		database = db.database( "basedatosCAP.db" )
-		asistentes = database.getNames( "asistente" )
-		proyectos = database.getWorkingPapers( int( investigador ) )
-		_asist = ""
-		_proy = ""
-		
 		# Creates a list with all the assistants
 		for x in asistentes:
 			_asist = _asist + """<dd><input type="radio" name = "asistente" value = "%d"> %s</dd>\n""" % ( database.getId( "asistente", x), x ) 
@@ -184,21 +174,8 @@ class HelloWorld(object):
 		for x in proyectos:
 			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 
 
-		_investigador = """
-			<fieldset class = pure-form pure-form-stacked>
-		    	<legend>Asignación de tarea</legend>
-		        <dl>
-		        	<dt><label for="asignador">Asignado por:</label></dt>
-		        		<dd><select name = "investigador" >
-		        			<option selected>%s</option>
-		        		</dd></select>
-		        </dl>
-		        <dl>
-			</form>
-			"""
-		database.getName("investigador", investigador)
-		return [ _header, _investigador % (database.getName("investigador", investigador)) ,_asignar % (_proy, _asist), _footer ]
-	asignarTarea2.exposed = True
+		return [ _header, _asignar % (_inv, _proy, _asist ), _footer ]
+	asignartarea.exposed = True
 
 	# Working papers page
 	def workingPaper( self ):
@@ -347,8 +324,9 @@ if __name__ == '__main__':
 	#cherrypy.config.update(http_conf)
 
 	conf = {'/style.css':{'tools.staticfile.on':True, 
-			  					 'tools.staticfile.filename':current_dir+"/style.css"
-			  					}}
+			  					 'tools.staticfile.filename':current_dir+"/style.css"},
+			  '/some.js':{'tools.staticfile.on':True,
+			  				  'tools.staticfile.filename':current_dir+"/some.js"}}
 	
 
 	cherrypy.quickstart( HelloWorld(), "/", config = conf )
