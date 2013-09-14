@@ -128,7 +128,7 @@ _wp = """
 _footer = """
 		<div id="required">
 			<p>&copy;Autor: Ricardo Ocampo<br/>
-			Last update: 13 Septiembre 2013</p>
+			Last update: 14 Septiembre 2013</p>
 		</div>
 	</div>
 </body>
