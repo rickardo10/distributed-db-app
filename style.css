@@ -23,9 +23,9 @@ input, textarea, select {
     border: 1px solid #C9C9C9; 
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset, -5px -5px 0 0 #F5F5F6, 5px 5px 0 0 #F5F5F6, 5px 0 0 0 #F5F5F6, 0 5px 0 0 #F5F5F6, 5px -5px 0 0 #F5F5F6, -5px 5px 0 0 #F5F5F6; 
     color: #545658; 
-    padding: 8px; 
-    font-size: 14px; 
-    border-radius: 2px 2px 2px 2px; 
+    padding: 4px; 
+    font-size: 13px; 
+    border-radius: 6px 6px 6px 6px; 
 }
 #submit { 
     background: url("../images/submit_bg.gif") repeat-x scroll 0 0 transparent; 
@@ -135,4 +135,9 @@ form label {
     margin-bottom: 5px; 
     font-weight: bold; 
     font-size: 12px; 
+}
+
+#descripcion {
+    height: 6em;
+    width:400pxs;
 }

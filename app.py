@@ -87,22 +87,36 @@ _asignar = """
          </p>
          <p>
 	         <label for="asignacion">Asignar a:</label>
+	         <select name = "asistente" >
 	        	%s
+	        	</select>
         	</p>
         	<p>
 	        	<label for="descripcion">Descripción de la Asignación:</label></dt>
-	         <input type="text" name="descripcion" id="descripcion" size="32" maxlength="200"/>
+	         <input type="text" name="descripcion" id="descripcion" maxlength="200"/>
         	</p>
         	<p>
 	        	<label for="prioridad">Prioridad:</label>
-	         <input type="radio" name = "prioridad" value = "1">Alta<br>
-	        	<input type="radio" name = "prioridad" value = "2">Media<br>
-	       	<input type="radio" name = "prioridad" value = "3">Baja
+	        	<select name = "prioridad">
+		         <option value = "1">Alta</option>
+		        	<option value = "2">Media</option>
+		       	<option value = "3">Baja</option>
+	       	</select>
         	</p>
         	<p>
-        		<input type="submit" value="Guardar" class="pure-button pure-button-primary">
+        		<button id="submit" type="submit">Guardar</button>
 			</p>
 			</form>
+"""
+
+_wp = """
+<form action="saveWorkingPaper" method="post">
+<label for="workingpaper">Nombre del proyecto:</label>
+<input type="text" name="nombre" id="nombre" maxlength="128"/>
+<label for="autor">Autor del proyecto:</label>
+%s
+<input type="submit" value="Guardar"> 
+</form>
 """
 
 _footer = """
@@ -113,25 +127,6 @@ _footer = """
 	</div>
 </body>
 </html>
-"""
-
-_wp = """
-<form action="saveWorkingPaper" method="post" class="pure-form pure-form-stacked">
-	<fieldset>
-    	<legend>Working Papers</legend>
-        <dl>
-        	<dt><label for="workingpaper">Nombre del proyecto:</label></dt>
-            <dd><input type="text" name="nombre" id="nombre" size="32" maxlength="128" /></dd>
-        </dl>
-        <dl>
-        	<dt><label for="autor">Autor del proyecto:</label></dt>
-            %s
-        </dl>
-        <dl>
-        	<input type="submit" value="Guardar" class="pure-button pure-button-primary"> 
-        </dl>
-    </fieldset>
-</form>
 """
 
 class HelloWorld(object):
@@ -171,13 +166,13 @@ class HelloWorld(object):
 
 		# Creates a list with all the assistants
 		for x in asistentes:
-			_asist = _asist + """<dd><input type="radio" name = "asistente" value = "%d"> %s</dd>\n""" % ( database.getId( "asistente", x), x ) 
+			_asist = _asist + """<option value = "%d"> %s</option>\n""" % ( database.getId( "asistente", x), x ) 
 		
 		# Creates a list with all reasearchers
 		for x in proyectos:
 			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 	
 
-		return [ _header, _asignar % (_inv, _proy, _asist ), _footer, str(investigador) ]
+		return [ _header, _asignar % (_inv, _proy, _asist ), _footer ]
 	asignartarea.exposed = True
 
 	# Working papers page
