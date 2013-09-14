@@ -14,28 +14,26 @@ _header = """
 <script type="application/javascript" src="some.js"></script>
 </head>
 <body>
-	<div>
+	<div class="pure-menu pure-menu-open">
 		<a href="/" class="pure-menu-heading">Menu</a>
 		<ul>
-			<li><a href = "/investigador">Investigador</a></li>
-			<li><a href = "/asistente">Asistente</a></li>
-			<li><a href = "/asignartarea">Asignar tarea</a></li>
-			<li><a href = "/workingpaper">Working Paper</a></li>
-			<li><a href = "/asiglist">Lista de Asignaciones</a></li>
+			<li><a href = "/investigador">Añadir investigador</a></li>
+			<li><a href = "/asistente">Añadir asistente</a></li>
+			<li><a href = "/workingpaper">Crear nuevo working paper</a></li>
+			<li><a href = "/asignartarea">Asignar nueva tarea</a></li>
+			<li class="pure-menu-heading">Tablas</li>
+			<li><a href = "/asiglist">Lista de asignaciones</a></li>
 		</ul>
 	</div>
 	<div id = "signup-form">
 		<div id = "signup-form-inner">
 			<div class="clearfix" id="header">
-				<h1>Investigador</h1>
+				<h1>%s</h1>
 			</div>
-			<p>Por favor complete cada uno de los campos, asegurandose de
-			utilizar un email correcto ya que se le enviará un código de 
-			validación.</p>
 """
 
 _investigador = """
-			<form id="send" action="saveAuthor" method="post">
+			<form id="send" action="guardarinvestigador" method="post">
 				<p>
 					<label for="nombre">Nombre:</label>
 					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder="Nombre"/>
@@ -51,7 +49,7 @@ _investigador = """
 """
 
 _asistente = """
-			<form id="send" action="saveAsistente" method="post">
+			<form id="send" action="guardarinvestigador" method="post">
 				<p>
 					<label for="nombre">Nombre:</label>
 					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder="Nombre"/>
@@ -71,7 +69,7 @@ _asistente = """
 """
 
 _asignar = """
-			<form id="asignacion" action="tareaAsignada" method="post" class="pure-form" >
+			<form id="asignacion" action="tareasignada" method="post" class="pure-form" >
 				<p>
 					<label for="asignador">Asignado por:</label>
 					<select name = "investigador" id = "invest" onchange="onChangeSetVar()">
@@ -110,7 +108,7 @@ _asignar = """
 """
 
 _wp = """
-			<form action="saveWorkingPaper" method="post">
+			<form action="guardarwp" method="post">
 				<p>
 					<label for="workingpaper">Nombre del proyecto:</label>
 					<input type="text" name="nombre" id="nombre" maxlength="128"/>
@@ -140,17 +138,17 @@ _footer = """
 class HelloWorld(object):
 	# Main page
 	def index( self ):
-		return [ _header, _footer ]
+		return [ _header % ("Menú principal"), _footer ]
 	index.exposed = True
 
 	# Researchers page
 	def investigador( self ):
-		return [ _header, _investigador, _footer ]
+		return [ _header % ("Añadir investigador"), _investigador, _footer ]
 	investigador.exposed = True
 
 	# Research assistants page
 	def asistente( self ):
-		return [ _header, _asistente, _footer ]
+		return [ _header % ("Añadir asistente"), _asistente, _footer ]
 	asistente.exposed = True
 
 	# Tasking
@@ -180,7 +178,7 @@ class HelloWorld(object):
 		for x in proyectos:
 			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 	
 
-		return [ _header, _asignar % (_inv, _proy, _asist ), _footer ]
+		return [ _header % ("Asignar tarea"), _asignar % (_inv, _proy, _asist ), _footer ]
 	asignartarea.exposed = True
 
 	# Working papers page
@@ -191,11 +189,11 @@ class HelloWorld(object):
 		for x in investigadores:
 			_inv = _inv + """<option value = "%d"> %s</option>""" % ( database.getId( "investigador", x), x ) 
 		
-		return [_header, _wp % _inv, _footer ]
+		return [_header % ("Crear nuevo workingpaper"), _wp % _inv, _footer ]
 	workingpaper.exposed = True
 
 	# Page that pops when a researcher is succesfully saved
-	def saveAuthor( self, nombre, email ):
+	def guardarinvestigador( self, nombre, email ):
 		_salvado = """
 			<p>Investigador correctamente salvado<p>
 			<p> <a href = "/">Regresar</a>
@@ -203,11 +201,11 @@ class HelloWorld(object):
 		database = db.database( "basedatosCAP.db" )
 		query = "insert into investigador(nombre, email) values ( '%s', '%s' )" % ( nombre, email )
 		results = database.insertData( query )
-		return [ _header, _salvado, _footer ]
-	saveAuthor.exposed = True
+		return [ _header % (""), _salvado, _footer ]
+	guardarinvestigador.exposed = True
 
 	# Page that pops when a research assistant is succesfully saved
-	def saveAsistente( self, nombre, email, telefono ):
+	def guardarasistente( self, nombre, email, telefono ):
 		_salvado = """
 			<p>Asistente correctamente salvado<p>
 			<p> <a href = "/">Regresar</a>
@@ -216,16 +214,16 @@ class HelloWorld(object):
 		database = db.database( "basedatosCAP.db" )
 		asistentes = database.getNames("asistente")
 		if nombre in asistentes:
-			return [_header, _asistente, "El asistente ya existe" , _footer] 
+			return [_header % (""), _asistente, "El asistente ya existe" , _footer] 
 
 		# Inserts a row with the new assistant
 		query = "insert into asistente(nombre, email, telefono) values ( '%s', '%s', '%s' )" % ( nombre, email, telefono )
 		results = database.insertData( query )
 		return [ _header, _salvado, _footer ]
-	saveAsistente.exposed = True
+	guardarinvestigador.exposed = True
 
 	# Page that pops when a task is succesfully assinged
-	def tareaAsignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
+	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
 		_salvado = """
 			<p>Tarea correctamente asignada<p>
 			<p> <a href = "/">Regresar</a>
@@ -239,12 +237,12 @@ class HelloWorld(object):
 		results = database.insertData( query )
 		query1 = "insert into linkasignaciones(asid, asigid, wpid ) values ( %d, %d, %d )" % ( int( asistente ), database.getIdAsig( descripcion ) , int( workingpaper ) )
 		results1 = database.insertData( query1 )
-		return [ _header, _salvado, _footer ]
-	tareaAsignada.exposed = True
+		return [ _header % (""), _salvado, _footer ]
+	tareasignada.exposed = True
 
 
 	# Page that pops when a working paper is succesfully created
-	def saveWorkingPaper( self, nombre, investigador ):
+	def guardarwp( self, nombre, investigador ):
 		_salvado = """
 			<p>Working paper correctamente creado<p>
 			<p> <a href = "/">Regresar</a>
@@ -258,7 +256,7 @@ class HelloWorld(object):
 		query1 = "insert into linkworkingpaper( invid, wpid ) values ( %d, %d )" % ( int( investigador ), database.getIdWP( nombre ))
 		results1 = database.insertData( query1 )
 		return [ _header, _salvado, _footer ]
-	saveWorkingPaper.exposed = True
+	guardarwp.exposed = True
 
 	# Displays the list of assignments
 	def asiglist( self ):
@@ -303,26 +301,28 @@ class HelloWorld(object):
 		counter = 1
 		for x in asignaciones:
 			data = database.getDataFromAsigId( x )[ 0 ]
-			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/deleteRow/%d"><button class="btn btn-primary">Borrar</button></form>' ) % ( x ) + "</tr>"
+			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/borrarlinea/%d"><button class="btn btn-primary">Borrar</button></form>' ) % ( x ) + "</tr>"
 
-		return [_header, _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
+		return [_header % ("Lista de asignaciones"), _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
 
-	def deleteRow( self, row ):
+	def borrarlinea( self, row ):
 		database = db.database("basedatosCAP.db")
 		database.deleteRow( int(row) )
 		raise cherrypy.HTTPRedirect("/asiglist")
-	deleteRow.exposed = True
+	borrarlinea.exposed = True
 
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	
-	#http_conf = {'global': {'server.socket_port': port,
-	#								'server.socket_host': ip}}
-	#cherrypy.config.update(http_conf)
+	ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	#port = 8000
+	#ip = "127.0.0.1"
+
+	http_conf = {'global': {'server.socket_port': port,
+									'server.socket_host': ip}}
+	cherrypy.config.update(http_conf)
 
 	conf = {'/style.css':{'tools.staticfile.on':True, 
 			  					 'tools.staticfile.filename':current_dir+"/style.css"},
