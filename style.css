@@ -182,7 +182,7 @@ table {
 }
 
 .table thead th {
-  vertical-align: bottom;
+  vertical-align: center;
 }
 
 .table caption + thead tr:first-child th,
