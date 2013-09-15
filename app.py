@@ -259,7 +259,7 @@ class HelloWorld(object):
 	guardarwp.exposed = True
 
 	# Displays the list of assignments
-	def asiglist( self ):
+	def asiglist( self, edit = "False", line = "None" ):
 
 		_header = """
 		<html>
@@ -274,7 +274,7 @@ class HelloWorld(object):
 				<div class="clearfix" id="header">
 					<h1>%s</h1>
 				</div>
-"""
+		"""
 		_body = """
 		<body>
 			<table class="table table-striped">
@@ -313,22 +313,77 @@ class HelloWorld(object):
 		asignaciones = asignaciones1 + asignaciones2 + asignaciones3 + asignaciones4
 
 		rows = ""
-		counter = 1
+
+		line = 6
+		data = database.getDataFromAsigId( line )
+		_prioridad = """
+				<select id="asignado" name = "prioridad">
+		         <option value = "1">Alta</option>
+		        	<option value = "2">Media</option>
+		       	<option value = "3">Baja</option>
+	       	</select>
+	   """
+
+		_avance = """
+				<select id="asignado" name = "avance">
+		         <option value = "10%">10%</option>
+		        	<option value = "20%">20%</option>
+		       	<option value = "30%">30%</option>
+		       	<option value = "40%">40%</option>
+		        	<option value = "50%">50%</option>
+		       	<option value = "60%">60%</option>
+		       	<option value = "70%">70%</option>
+		        	<option value = "80%">80%</option>
+		       	<option value = "90%">90%</option>
+	       	</select>
+	   """
+
+		_estado = """
+	   		<select id = "asignado" name = "estado" >
+	   			<option value = "En proceso">En proceso</option>
+	   			<option value = "Pausado">Pausado</option>
+	   			<option value = "Terminado">Terminado</option>
+	   		</select>
+	   """
+
+		_asignado = """
+				<select id = "asignado" name = "asistente" >
+	        	%s
+	        	</select>
+	   """
+
+		_asist = ""
+		asistentes = database.getNames( "asistente" )
+	   # Creates a list with all the assistants
+		for x in asistentes:
+			_asist = _asist + """<option value = "%d"> %s</option>\n""" % ( database.getId( "asistente", x), x ) 
+
+
+		_lineToEdit = "<tr>" + (_row % ( database.getAuthorFromAsigId(line) ) + 
+											  _row % ( database.getWPFromAsigId(line) ) + 
+											  _row % ( _asignado % _asist  ) + 
+											  _row % ( data[0] ) + 
+											  _row % ( _estado ) + 
+											  _row % ( _prioridad ) + 
+											  _row % ( _avance ) + 
+											  _row % ( data[4] ) + 
+											  _row % ( data[5] ) +  
+											  _row % ( "<textarea id='comment'>" + str(data[6]) +"</textarea>" ) + 
+											  _row % (( """<p><button onclick='editrow(%d)' class='btn btn-primary btn-mini'>Guardar</button></p>""" ) % ( line ) ) +
+										"</tr>" )
+
 		for x in asignaciones:
-			data = database.getDataFromAsigId( x )[ 0 ]
-			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + 
-										  _row % ( database.getWPFromAsigId(x) ) + 
-										  _row % ( database.getAsFromAsigId(x) ) + 
-										  _row % ( data[0] ) + 
-										  _row % ( data[1] ) + 
-										  _row % ( data[2] ) + 
-										  _row % ( data[3] ) + 
-										  _row % ( data[4] ) + 
-										  _row % ( data[5] ) +  
-										  _row % ( data[6] ) + 
-										  _row % (( """<p><button onclick='editrow(%d)' class='btn btn-primary btn-mini'>Editar</button></p>""" ) % ( x ) +
-										  """<button onclick='deleterow(%d)' class='btn btn-primary btn-mini'>Borrar</button>""" % ( x ) ) +
-										  "</tr>") 
+			if x != line:			
+				data = database.getDataFromAsigId( x )
+				rows = rows + "<tr>" + ( _row % ( database.getAuthorFromAsigId( x ) ) +
+										_row % ( database.getWPFromAsigId( x ) ) +
+										_row % ( database.getAsFromAsigId( x ) ) +
+										'\n'.join( [ _row % ( y ) for y in data ] ) +
+										_row % (( """<p><button onclick='editrow(%d)' class='btn btn-primary btn-mini'>Editar</button></p>""" ) % ( x ) +
+											  """<button onclick='deleterow(%d)' class='btn btn-primary btn-mini'>Borrar</button>""" % ( x ) ) +
+											  "</tr>")
+			else:
+				rows = rows + _lineToEdit
 
 		return [_header % ("Lista de asignaciones"), _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True

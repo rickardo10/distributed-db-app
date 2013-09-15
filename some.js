@@ -8,5 +8,6 @@ function deleterow( row ){
 }
 
 function editrow( row ){
+	var comments = document.getElementById("comment")
 	alert(row)
 }

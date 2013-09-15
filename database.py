@@ -65,7 +65,7 @@ class database:
 
 	def getDataFromAsigId( self, asigId ):
 		data = self.con.execute( "select * from asignaciones where rowid = %d " % ( asigId ) )
-		return data.fetchall()
+		return data.fetchall()[0]
 
 	def deleteRow( self, asigId ):
 		self.con.execute( "delete from asignaciones where rowid = %d" % ( asigId ) )

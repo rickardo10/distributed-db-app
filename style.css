@@ -28,7 +28,20 @@ input, textarea, select {
     border-radius: 6px 6px 6px 6px;
     height: 33px;
 }
-textarea
+textarea{
+  width: 100%;
+  font-size: 10px;
+}
+
+#asignado{
+  font-size: 12px;
+  width:100%;
+}
+
+#comment{
+  width: 125px;
+  height: 125px;
+}
 
 #submit { 
     background: url("../images/submit_bg.gif") repeat-x scroll 0 0 transparent; 
