@@ -73,7 +73,7 @@ _asignar = """
 				<p>
 					<label for="asignador">Asignado por:</label>
 					<select name = "investigador" id = "invest" onchange="onChangeSetVar()">
-					%s
+						%s
 					</select>
 				</p>
 			<p>
@@ -160,7 +160,7 @@ class HelloWorld(object):
 
 		_asist = ""
 		_proy = ""
-		_inv = ""
+		_inv = "<option selected>-Investigador-</selected>"
 		
 		# Creates a list with all reasearchers
 		if investigador != "0":
@@ -189,7 +189,7 @@ class HelloWorld(object):
 		for x in investigadores:
 			_inv = _inv + """<option value = "%d"> %s</option>""" % ( database.getId( "investigador", x), x ) 
 		
-		return [_header % ("Crear nuevo workingpaper"), _wp % _inv, _footer ]
+		return [_header % ("Crear nuevo working paper"), _wp % _inv, _footer ]
 	workingpaper.exposed = True
 
 	# Page that pops when a researcher is succesfully saved
@@ -315,10 +315,10 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
