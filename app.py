@@ -4,6 +4,7 @@ import cherrypy
 import database as db
 import datetime
 import os
+from pytz import timezone
 
 _header = """
 <html>
@@ -230,7 +231,7 @@ class HelloWorld(object):
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )
-		time = datetime.datetime.now().strftime("%d-%m-%y %H:%M")
+		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%d-%m-%y %H:%M")
 
 		# Inserts a row with the new task
 		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, prioridad, time )
@@ -409,7 +410,7 @@ class HelloWorld(object):
 
 	def terminado( self, row ):
 		database = db.database("basedatosCAP.db")
-		time = datetime.datetime.now().strftime("%d-%m-%y %H:%M")
+		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%d-%m-%y %H:%M")
 		database.insertData("update asignaciones set fechafin = '%s' where rowid = %d" % (time, int(row) ) )
 		raise cherrypy.HTTPRedirect("/asiglist")
 	terminado.exposed = True
@@ -417,10 +418,10 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
