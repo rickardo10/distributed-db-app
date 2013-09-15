@@ -259,8 +259,8 @@ class HelloWorld(object):
 	guardarwp.exposed = True
 
 	# Displays the list of assignments
-	def asiglist( self, edit = "False", line = "None" ):
-
+	def asiglist( self, row = 0 ):
+		row = int( row )
 		_header = """
 		<html>
 		<head>
@@ -313,38 +313,38 @@ class HelloWorld(object):
 		asignaciones = asignaciones1 + asignaciones2 + asignaciones3 + asignaciones4
 
 		rows = ""
-
-		line = 6
-		data = database.getDataFromAsigId( line )
+		if row != 0: data = database.getDataFromAsigId( row )
 		_prioridad = """
 				<select id="asignado" name = "prioridad">
-		         <option value = "1">Alta</option>
-		        	<option value = "2">Media</option>
-		       	<option value = "3">Baja</option>
+		         <option %s value = "1">Alta</option>
+		        	<option %s value = "2">Media</option>
+		       	<option %s value = "3">Baja</option>
 	       	</select>
 	   """
 
 		_avance = """
 				<select id="asignado" name = "avance">
-		         <option value = "10%">10%</option>
-		        	<option value = "20%">20%</option>
-		       	<option value = "30%">30%</option>
-		       	<option value = "40%">40%</option>
-		        	<option value = "50%">50%</option>
-		       	<option value = "60%">60%</option>
-		       	<option value = "70%">70%</option>
-		        	<option value = "80%">80%</option>
-		       	<option value = "90%">90%</option>
+		         <option %s value = "10">10%%</option>
+		        	<option %s value = "20">20%%</option>
+		       	<option %s value = "30">30%%</option>
+		       	<option %s value = "40">40%%</option>
+		        	<option %s value = "50">50%%</option>
+		       	<option %s value = "60">60%%</option>
+		       	<option %s value = "70">70%%</option>
+		        	<option %s value = "80">80%%</option>
+		       	<option %s value = "90">90%%</option>
 	       	</select>
 	   """
+		prioridades = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
 
 		_estado = """
-	   		<select id = "asignado" name = "estado" >
-	   			<option value = "En proceso">En proceso</option>
-	   			<option value = "Pausado">Pausado</option>
-	   			<option value = "Terminado">Terminado</option>
-	   		</select>
-	   """
+				<select id = "asignado" name = "estado" >
+					<option %s value = "En proceso">En proceso</option>
+					<option %s value = "Pausado">Pausado</option>
+					<option %s value = "Terminado">Terminado</option>
+				</select>
+		"""
+		estados = ["En proceso", "Pausado", "Terminado"]
 
 		_asignado = """
 				<select id = "asignado" name = "asistente" >
@@ -355,25 +355,30 @@ class HelloWorld(object):
 		_asist = ""
 		asistentes = database.getNames( "asistente" )
 	   # Creates a list with all the assistants
-		for x in asistentes:
-			_asist = _asist + """<option value = "%d"> %s</option>\n""" % ( database.getId( "asistente", x), x ) 
+		if row != 0:
+			for x in asistentes:
+				if x == database.getAsFromAsigId( row ):
+					s = 'selected'
+				else:
+					s = ''
+				_asist = _asist + """<option %s value = "%d"> %s</option>\n""" % ( s, database.getId( "asistente", x), x ) 
 
 
-		_lineToEdit = "<tr>" + (_row % ( database.getAuthorFromAsigId(line) ) + 
-											  _row % ( database.getWPFromAsigId(line) ) + 
-											  _row % ( _asignado % _asist  ) + 
-											  _row % ( data[0] ) + 
-											  _row % ( _estado ) + 
-											  _row % ( _prioridad ) + 
-											  _row % ( _avance ) + 
-											  _row % ( data[4] ) + 
-											  _row % ( data[5] ) +  
-											  _row % ( "<textarea id='comment'>" + str(data[6]) +"</textarea>" ) + 
-											  _row % (( """<p><button onclick='editrow(%d)' class='btn btn-primary btn-mini'>Guardar</button></p>""" ) % ( line ) ) +
-										"</tr>" )
+			_lineToEdit = "<tr>" + (_row % ( database.getAuthorFromAsigId( row ) ) + 
+												  _row % ( database.getWPFromAsigId( row ) ) + 
+												  _row % ( _asignado % _asist  ) + 
+												  _row % ( data[0] ) + 
+												  _row % ( _estado % tuple([ "selected" if x is data[1] else "" for x in estados])) + 
+												  _row % ( _prioridad % tuple([ "selected" if x + 1 is data[2] else "" for x in range(3)])) + 
+												  _row % ( _avance % tuple([ "selected" if x is data[3] else "" for x in prioridades]) ) + 
+												  _row % ( data[4] ) + 
+												  _row % ( data[5] ) +  
+												  _row % ( "<textarea id='comment'>" + str(data[6]) +"</textarea>" ) + 
+												  _row % (( """<p><button onclick='guardar(%d)' class='btn btn-primary btn-mini'>Guardar</button></p>""" ) % ( row ) )  +
+											"</tr>" )
 
 		for x in asignaciones:
-			if x != line:			
+			if x != row:			
 				data = database.getDataFromAsigId( x )
 				rows = rows + "<tr>" + ( _row % ( database.getAuthorFromAsigId( x ) ) +
 										_row % ( database.getWPFromAsigId( x ) ) +
@@ -397,10 +402,10 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	port = 8080
-	ip = "127.0.0.1"
+	ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	#port = 8000
+	#ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}

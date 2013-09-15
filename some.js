@@ -8,6 +8,9 @@ function deleterow( row ){
 }
 
 function editrow( row ){
-	var comments = document.getElementById("comment")
-	alert(row)
+	window.location.href="asiglist?row="+row
+}
+
+function guardar( row ){
+	window.location.href="asiglist"
 }
