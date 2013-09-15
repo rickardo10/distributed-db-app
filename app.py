@@ -316,7 +316,19 @@ class HelloWorld(object):
 		counter = 1
 		for x in asignaciones:
 			data = database.getDataFromAsigId( x )[ 0 ]
-			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/borrarlinea/%d"><button class="btn btn-primary btn-mini">Borrar</button></form>' ) % ( x ) + "</tr>"
+			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + 
+										  _row % ( database.getWPFromAsigId(x) ) + 
+										  _row % ( database.getAsFromAsigId(x) ) + 
+										  _row % ( data[0] ) + 
+										  _row % ( data[1] ) + 
+										  _row % ( data[2] ) + 
+										  _row % ( data[3] ) + 
+										  _row % ( data[4] ) + 
+										  _row % ( data[5] ) +  
+										  _row % ( data[6] ) + 
+										  _row % (( """<p><button onclick='editrow(%d)' class='btn btn-primary btn-mini'>Editar</button></p>""" ) % ( x ) +
+										  """<button onclick='deleterow(%d)' class='btn btn-primary btn-mini'>Borrar</button>""" % ( x ) ) +
+										  "</tr>") 
 
 		return [_header % ("Lista de asignaciones"), _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
@@ -332,7 +344,7 @@ if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
 	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
 	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	port = 8000
+	port = 8080
 	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
