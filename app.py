@@ -96,9 +96,9 @@ _asignar = """
         	<p>
 	        	<label for="prioridad">Prioridad:</label>
 	        	<select name = "prioridad">
-		         <option value = "1">Alta</option>
-		        	<option value = "2">Media</option>
-		       	<option value = "3">Baja</option>
+		         <option value = "Alta">Alta</option>
+		        	<option value = "Media">Media</option>
+		       	<option value = "Baja">Baja</option>
 	       	</select>
         	</p>
         	<p>
@@ -315,30 +315,31 @@ class HelloWorld(object):
 		rows = ""
 		if row != 0: data = database.getDataFromAsigId( row )
 		_prioridad = """
-				<select id="asignado" name = "prioridad">
-		         <option %s value = "1">Alta</option>
-		        	<option %s value = "2">Media</option>
-		       	<option %s value = "3">Baja</option>
+				<select id="prioridad" name = "prioridad">
+		         <option %s value = "Alta">Alta</option>
+		        	<option %s value = "Media">Media</option>
+		       	<option %s value = "Baja">Baja</option>
 	       	</select>
 	   """
+		prioridades = ["Alta", "Media", "Baja"] 
 
 		_avance = """
-				<select id="asignado" name = "avance">
-		         <option %s value = "10">10%%</option>
-		        	<option %s value = "20">20%%</option>
-		       	<option %s value = "30">30%%</option>
-		       	<option %s value = "40">40%%</option>
-		        	<option %s value = "50">50%%</option>
-		       	<option %s value = "60">60%%</option>
-		       	<option %s value = "70">70%%</option>
-		        	<option %s value = "80">80%%</option>
-		       	<option %s value = "90">90%%</option>
+				<select id="avance" name = "avance">
+		         <option %s value = "10%%">10%%</option>
+		        	<option %s value = "20%%">20%%</option>
+		       	<option %s value = "30%%">30%%</option>
+		       	<option %s value = "40%%">40%%</option>
+		        	<option %s value = "50%%">50%%</option>
+		       	<option %s value = "60%%">60%%</option>
+		       	<option %s value = "70%%">70%%</option>
+		        	<option %s value = "80%%">80%%</option>
+		       	<option %s value = "90%%">90%%</option>
 	       	</select>
 	   """
-		prioridades = ["10", "20", "30", "40", "50", "60", "70", "80", "90"]
+		avances = ["10%%", "20%%", "30%%", "40%%", "50%%", "60%%", "70%%", "80%%", "90%%"]
 
 		_estado = """
-				<select id = "asignado" name = "estado" >
+				<select id = "estado" name = "estado" >
 					<option %s value = "En proceso">En proceso</option>
 					<option %s value = "Pausado">Pausado</option>
 					<option %s value = "Terminado">Terminado</option>
@@ -368,9 +369,9 @@ class HelloWorld(object):
 												  _row % ( database.getWPFromAsigId( row ) ) + 
 												  _row % ( _asignado % _asist  ) + 
 												  _row % ( data[0] ) + 
-												  _row % ( _estado % tuple([ "selected" if x is data[1] else "" for x in estados])) + 
-												  _row % ( _prioridad % tuple([ "selected" if x + 1 is data[2] else "" for x in range(3)])) + 
-												  _row % ( _avance % tuple([ "selected" if x is data[3] else "" for x in prioridades]) ) + 
+												  _row % ( _estado % tuple([ "selected" if x == data[1] else "" for x in estados])) + 
+												  _row % ( _prioridad % tuple([ "selected" if x == data[2] else "" for x in prioridades])) + 
+												  _row % ( _avance % tuple([ "selected" if x == data[3] else "" for x in avances]) ) + 
 												  _row % ( data[4] ) + 
 												  _row % ( data[5] ) +  
 												  _row % ( "<textarea id='comment'>" + str(data[6]) +"</textarea>" ) + 
@@ -399,13 +400,19 @@ class HelloWorld(object):
 		raise cherrypy.HTTPRedirect("/asiglist")
 	borrarlinea.exposed = True
 
+	def updaterow( self, row, asignado, estado, prioridad, avance, comentarios ):
+		database = db.database("basedatosCAP.db")
+		database.updateRow( int(row), int(asignado), estado, prioridad, avance, comentarios )
+		raise cherrypy.HTTPRedirect("/asiglist")
+	updaterow.exposed = True
+
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}

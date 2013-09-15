@@ -12,5 +12,10 @@ function editrow( row ){
 }
 
 function guardar( row ){
-	window.location.href="asiglist"
+	var comment = document.getElementById("comment").value
+	var asignado = document.getElementById("asignado").value
+	var avance = document.getElementById("avance").value
+	var prioridad = document.getElementById("prioridad").value
+	var estado = document.getElementById("estado").value
+	window.location.href="updaterow?row="+row+"&comentarios="+comment+"&asignado="+asignado+"&avance="+avance+"&prioridad="+prioridad+"&estado="+estado
 }

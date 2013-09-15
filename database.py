@@ -71,3 +71,11 @@ class database:
 		self.con.execute( "delete from asignaciones where rowid = %d" % ( asigId ) )
 		self.con.execute( "delete from linkasignaciones where asigid = %d" % (asigId) )
 		self.con.commit()
+
+	def updateRow( self, asigId, asignado, estado, prioridad, avance, comentarios ):
+		self.con.execute( "update linkasignaciones set asid = '%d' where asigId = %d" % (asignado, asigId ) )
+		self.con.execute( "update asignaciones set estatus = '%s' where rowid = %d" % (estado, asigId ) )
+		self.con.execute( "update asignaciones set prioridad = '%s' where rowid = %d" % (prioridad, asigId ) )
+		self.con.execute( "update asignaciones set avance = '%s' where rowid = %d" % (avance, asigId ) )
+		self.con.execute( "update asignaciones set comentarios = '%s' where rowid = %d" % (comentarios, asigId ) )
+		self.con.commit()
