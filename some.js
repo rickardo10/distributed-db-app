@@ -19,3 +19,7 @@ function guardar( row ){
 	var estado = document.getElementById("estado").value
 	window.location.href="updaterow?row="+row+"&comentarios="+comment+"&asignado="+asignado+"&avance="+avance+"&prioridad="+prioridad+"&estado="+estado
 }
+
+function terminado( row ){
+	window.location.href="terminado?row="+row
+}

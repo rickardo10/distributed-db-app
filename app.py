@@ -91,7 +91,7 @@ _asignar = """
         	</p>
         	<p>
 	        	<label for="descripcion">Descripción de la Asignación:</label></dt>
-	         <input type="text" name="descripcion" maxlength="200"/>
+	         <input type="text" name="descripcion" maxlength="200" placeholder="Descripción de la asignación"/>
         	</p>
         	<p>
 	        	<label for="prioridad">Prioridad:</label>
@@ -111,7 +111,7 @@ _wp = """
 			<form action="guardarwp" method="post">
 				<p>
 					<label for="workingpaper">Nombre del proyecto:</label>
-					<input type="text" name="nombre" id="nombre" maxlength="128"/>
+					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder ="Nombre del proyecto"/>
 				</p>
 				<p>
 					<label for="autor">Autor del proyecto:</label>
@@ -128,7 +128,7 @@ _wp = """
 _footer = """
 		<div id="required">
 			<p>&copy;Autor: Ricardo Ocampo<br/>
-			Last update: 14 Septiembre 2013</p>
+			Last update: 15 Septiembre 2013</p>
 		</div>
 	</div>
 </body>
@@ -230,7 +230,7 @@ class HelloWorld(object):
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )
-		time = datetime.datetime.now().strftime("%d-%m-%y")
+		time = datetime.datetime.now().strftime("%d-%m-%y %H:%M")
 
 		# Inserts a row with the new task
 		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, prioridad, time )
@@ -375,7 +375,8 @@ class HelloWorld(object):
 												  _row % ( data[4] ) + 
 												  _row % ( data[5] ) +  
 												  _row % ( "<textarea id='comment'>" + str(data[6]) +"</textarea>" ) + 
-												  _row % (( """<p><button onclick='guardar(%d)' class='btn btn-primary btn-mini'>Guardar</button></p>""" ) % ( row ) )  +
+												  _row % (( """<p><button onclick='guardar(%d)' class='btn btn-primary btn-mini'>Guardar</button></p>""" ) % ( row )  +
+																"""<button onclick='terminado(%d)' class='btn btn-primary btn-mini'>Terminado</button>""" % ( row ) ) +
 											"</tr>" )
 
 		for x in asignaciones:
@@ -405,6 +406,13 @@ class HelloWorld(object):
 		database.updateRow( int(row), int(asignado), estado, prioridad, avance, comentarios )
 		raise cherrypy.HTTPRedirect("/asiglist")
 	updaterow.exposed = True
+
+	def terminado( self, row ):
+		database = db.database("basedatosCAP.db")
+		time = datetime.datetime.now().strftime("%d-%m-%y %H:%M")
+		database.insertData("update asignaciones set fechafin = '%s' where rowid = %d" % (time, int(row) ) )
+		raise cherrypy.HTTPRedirect("/asiglist")
+	terminado.exposed = True
 
 # Starts the webpage
 if __name__ == '__main__':
