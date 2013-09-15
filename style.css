@@ -25,7 +25,8 @@ input, textarea, select {
     color: #545658; 
     padding: 4px; 
     font-size: 13px; 
-    border-radius: 6px 6px 6px 6px; 
+    border-radius: 6px 6px 6px 6px;
+    height: 33px;
 }
 #submit { 
     background: url("../images/submit_bg.gif") repeat-x scroll 0 0 transparent; 
@@ -168,8 +169,9 @@ table {
   padding: 8px;
   line-height: 20px;
   text-align: center;
-  vertical-align: top;
+  vertical-align: center;
   border-top: 1px solid #dddddd;
+  width: 50px;
 }
 
 .table th {

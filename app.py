@@ -91,7 +91,7 @@ _asignar = """
         	</p>
         	<p>
 	        	<label for="descripcion">Descripción de la Asignación:</label></dt>
-	         <input type="text" name="descripcion" id="descripcion" maxlength="200"/>
+	         <input type="text" name="descripcion" maxlength="200"/>
         	</p>
         	<p>
 	        	<label for="prioridad">Prioridad:</label>
@@ -315,10 +315,10 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
