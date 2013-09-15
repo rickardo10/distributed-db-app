@@ -260,6 +260,21 @@ class HelloWorld(object):
 
 	# Displays the list of assignments
 	def asiglist( self ):
+
+		_header = """
+		<html>
+		<head>
+		<title>Investigador</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" media="all" href="style.css" />
+		<script type="application/javascript" src="some.js"></script>
+		</head>
+		<body>
+			<div id = "signup-form-inner">
+				<div class="clearfix" id="header">
+					<h1>%s</h1>
+				</div>
+"""
 		_body = """
 		<body>
 			<table class="table table-striped">
@@ -301,7 +316,7 @@ class HelloWorld(object):
 		counter = 1
 		for x in asignaciones:
 			data = database.getDataFromAsigId( x )[ 0 ]
-			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/borrarlinea/%d"><button class="btn btn-primary">Borrar</button></form>' ) % ( x ) + "</tr>"
+			rows = rows + "<tr>" + (_row % ( database.getAuthorFromAsigId( x ) ) + _row % ( database.getWPFromAsigId(x) ) + _row % ( database.getAsFromAsigId(x) ) + _row % ( data[0] ) + _row % ( data[1] ) + _row % ( data[2] ) + _row % ( data[3] ) + _row % ( data[4] ) + _row % ( data[5] ) + _row % ( data[6] ) )+ _row % ( '<form action = "/borrarlinea/%d"><button class="btn btn-primary btn-mini">Borrar</button></form>' ) % ( x ) + "</tr>"
 
 		return [_header % ("Lista de asignaciones"), _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
