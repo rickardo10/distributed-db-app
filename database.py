@@ -19,6 +19,10 @@ class database:
 		name = self.con.execute( "select nombre from %s" % (table) )
 		return [ x[0] for x in name ]
 
+	def getIds( self, table ):
+		name = self.con.execute( "select rowid from %s" % (table) )
+		return [ x[0] for x in name ]
+
 	def getId( self, table, name ):
 		id = self.con.execute( "select rowid from %s where nombre = '%s'" % ( table, name ) )
 		id = id.fetchone()[0]
@@ -43,6 +47,10 @@ class database:
 		workingPaper = [ x[0] for x in workingPaper ]
 		return workingPaper
 
+	def getWpIds( self ):
+		wp = self.con.execute( "select rowid from workingpaper")
+		return [ x[0] for x in wp ]
+
 	def getAsignments( self, nameIds ):
 		Asignments = self.con.execute( (  "select rowid from asignaciones where rowid in ( select asigid from linkasignaciones where asid = %d )" ) % nameIds )
 		Asignments = [ x[0] for x in Asignments ]
@@ -66,6 +74,10 @@ class database:
 	def getDataFromAsigId( self, asigId ):
 		data = self.con.execute( "select * from asignaciones where rowid = %d " % ( asigId ) )
 		return data.fetchall()[0]
+
+	def getAsigFromWpAndInv( self, invId, wpId ):
+		asigs = self.con.execute( "select A.rowid from linkasignaciones as A join linkworkingpaper as B on B.wpid = A.wpid where B.invid = %d and A.wpid = %d" % ( invId, wpId ) )
+		return [ x[0] for x in asigs ]
 
 	def deleteRow( self, asigId ):
 		self.con.execute( "delete from asignaciones where rowid = %d" % ( asigId ) )

@@ -5,6 +5,14 @@
 * 29/08/2011
 */
 
+#investigador{
+  float: left;
+}
+
+#foot{
+  clear: both;
+}
+
 body { 
     background: #FDFDFD; 
 }

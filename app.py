@@ -36,87 +36,98 @@ _header = """
 _investigador = """
 			<form id="send" action="guardarinvestigador" method="post">
 				<p>
-					<label for="nombre">Nombre:</label>
-					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder="Nombre"/>
+					<label for="nombre">Nombre:</label>	
+					<input type="text" name="nombre" id="nombre" minlength="10" placeholder="Nombre" required/>
 				</p>
 				<p>
 					<label for="email">E-mail:</label>
-					<input type="text" name="email" id="email" maxlength="32" placeholder="E-mail"/>
+					<input type="email" name="email" id="email" placeholder="E-mail" required/>
 				</p>
 				<p>
 					<button class="btn btn-primary" type="submit">Guardar</button>
 				</p>
 			</form>
+			<script>
+			$("#send").validate();
+			</script>
 """
 
 _asistente = """
-			<form id="send" action="guardarinvestigador" method="post">
+			<form id="send" action="guardarasistente" method="post">
 				<p>
 					<label for="nombre">Nombre:</label>
-					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder="Nombre"/>
+					<input type="text" name="nombre" id="nombre" minlength="10" placeholder="Nombre" required/>
 				</p>
 				<p>
 					<label for="email">E-mail:</label>
-					<input type="text" name="email" id="email" maxlength="32" placeholder="E-mail"/>
+					<input type="email" name="email" id="email" placeholder="E-mail" required/>
 				</p>
 				<p>
 					<label for="telefono">Teléfono:</label>
-					<input type="text" name="telefono" id="telefono" maxlength="32" placeholder="Teléfono"/>
+					<input type="textarea" name="telefono" id="telefono" placeholder="Teléfono"/>
 				</p>
 				<p>
 					<button class="btn btn-primary" type="submit">Guardar</button>
 				</p>
 			</form>
+			<script>
+				$("#send").validate();
+			</script>
 """
 
 _asignar = """
 			<form id="asignacion" action="tareasignada" method="post" class="pure-form" >
 				<p>
 					<label for="asignador">Asignado por:</label>
-					<select name = "investigador" id = "invest" onchange="onChangeSetVar()">
+					<select name = "investigador" id = "invest" onchange="onChangeSetVar()" required>
 						%s
 					</select>
 				</p>
 			<p>
 	        	<label for="asignador">Proyecto:</label>
-	        	<select name = "workingpaper" >
-		        	<option selected>-Working Paper-</option>
+	        	<select name = "workingpaper" required>
+		        	<option selected value="">-Working Paper-</option>
 		        	%s
 	        	</select>
          </p>
          <p>
 	         <label for="asignacion">Asignar a:</label>
-	         <select name = "asistente" >
+	         <select name = "asistente" required>
+	         	<option selected value="">-Asistente-</option>
 	        	%s
 	        	</select>
         	</p>
         	<p>
 	        	<label for="descripcion">Descripción de la Asignación:</label></dt>
-	         <input type="text" name="descripcion" maxlength="200" placeholder="Descripción de la asignación"/>
+	         <input type="text" name="descripcion" placeholder="Descripción de la asignación" required/>
         	</p>
         	<p>
 	        	<label for="prioridad">Prioridad:</label>
 	        	<select name = "prioridad">
-		         <option value = "Alta">Alta</option>
-		        	<option value = "Media">Media</option>
-		       	<option value = "Baja">Baja</option>
+		         <option value = "1">Alta</option>
+		        	<option value = "2">Media</option>
+		       	<option selected value = "3">Baja</option>
 	       	</select>
         	</p>
         	<p>
         		<button class="btn btn-primary" type="submit">Guardar</button>
 			</p>
 			</form>
+			<script>
+				$("#asignacion").validate();
+			</script>
 """
 
 _wp = """
-			<form action="guardarwp" method="post">
+			<form id="asignacion" action="guardarwp" method="post">
 				<p>
 					<label for="workingpaper">Nombre del proyecto:</label>
-					<input type="text" name="nombre" id="nombre" maxlength="128" placeholder ="Nombre del proyecto"/>
+					<input type="text" name="nombre" id="nombre" placeholder ="Nombre del proyecto" required/>
 				</p>
 				<p>
 					<label for="autor">Autor del proyecto:</label>
-					<select name = "investigador">
+					<select name = "investigador" required>
+						<option value="" selected>-Investigador</option>
 					%s
 					</select>
 				</p>
@@ -124,6 +135,9 @@ _wp = """
 					<button class="btn btn-primary" type="submit">Guardar</button> 
 				<p>
 				</form>
+				<script>
+					$("#asignacion").validate();
+				</script>
 """
 
 _footer = """
@@ -161,7 +175,7 @@ class HelloWorld(object):
 
 		_asist = ""
 		_proy = ""
-		_inv = "<option selected>-Investigador-</selected>"
+		_inv = "<option selected value="">-Investigador-</selected>"
 		
 		# Creates a list with all reasearchers
 		if investigador != "0":
@@ -221,7 +235,7 @@ class HelloWorld(object):
 		query = "insert into asistente(nombre, email, telefono) values ( '%s', '%s', '%s' )" % ( nombre, email, telefono )
 		results = database.insertData( query )
 		return [ _header % (""), _salvado, _footer ]
-	guardarinvestigador.exposed = True
+	guardarasistente.exposed = True
 
 	# Page that pops when a task is succesfully assinged
 	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
@@ -231,7 +245,7 @@ class HelloWorld(object):
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )
-		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%d-%m-%y %H:%M")
+		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%b %d, %Y %H:%M %p")
 
 		# Inserts a row with the new task
 		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, prioridad, time )
@@ -268,6 +282,9 @@ class HelloWorld(object):
 		<title>Investigador</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" type="text/css" media="all" href="style.css" />
+		<script type="text/javascript" src="jquery-latest.js"></script>
+		<script type="application/javascript" src="jquery.validate.js"></script>
+		<script type="text/javascript" src="jquery.tablesorter.js"></script> 
 		<script type="application/javascript" src="some.js"></script>
 		</head>
 		<body>
@@ -278,7 +295,7 @@ class HelloWorld(object):
 		"""
 		_body = """
 		<body>
-			<table class="table table-striped">
+			<table id="myTable" class="table table-striped tablesorter">
 				<thead>
 					<tr>
 						<th>Autor</th>
@@ -317,12 +334,12 @@ class HelloWorld(object):
 		if row != 0: data = database.getDataFromAsigId( row )
 		_prioridad = """
 				<select id="prioridad" name = "prioridad">
-		         <option %s value = "Alta">Alta</option>
-		        	<option %s value = "Media">Media</option>
-		       	<option %s value = "Baja">Baja</option>
+		         <option %s value = "1">Alta</option>
+		        	<option %s value = "2">Media</option>
+		       	<option %s value = "3">Baja</option>
 	       	</select>
 	   """
-		prioridades = ["Alta", "Media", "Baja"] 
+		prioridades = [ "1", "2", "3"] 
 
 		_avance = """
 				<select id="avance" name = "avance">
@@ -410,7 +427,7 @@ class HelloWorld(object):
 
 	def terminado( self, row ):
 		database = db.database("basedatosCAP.db")
-		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%d-%m-%y %H:%M")
+		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%b %d, %Y %H:%M %p")
 		database.insertData("update asignaciones set fechafin = '%s' where rowid = %d" % (time, int(row) ) )
 		raise cherrypy.HTTPRedirect("/asiglist")
 	terminado.exposed = True
@@ -418,10 +435,10 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
@@ -430,7 +447,13 @@ if __name__ == '__main__':
 	conf = {'/style.css':{'tools.staticfile.on':True, 
 			  					 'tools.staticfile.filename':current_dir+"/style.css"},
 			  '/some.js':{'tools.staticfile.on':True,
-			  				  'tools.staticfile.filename':current_dir+"/some.js"}}
+			  				  'tools.staticfile.filename':current_dir+"/some.js"},
+			  '/jquery.tablesorter.js':{'tools.staticfile.on':True,
+			  				  'tools.staticfile.filename':current_dir+"/jquery.tablesorter.js"},
+			  '/jquery-latest.js':{'tools.staticfile.on':True,
+			  				  'tools.staticfile.filename':current_dir+"/jquery-latest.js"},
+			  '/jquery.validate.js':{'tools.staticfile.on':True,
+			  				  'tools.staticfile.filename':current_dir+"/jquery.validate.js"}}
 	
 
 	cherrypy.quickstart( HelloWorld(), "/", config = conf )
