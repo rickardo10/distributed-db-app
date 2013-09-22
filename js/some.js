@@ -27,26 +27,13 @@ function terminado( row ){
 }
 
 //SORTER///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// initialize sorter
-$(document).ready(function() 
-    { 
-        $("#myTable").tablesorter(); 
-    } 
-); 
-
 // sets initial sort
-$(document).ready(function() 
-    { 
-        $("#myTable").tablesorter( {sortList: [[4,0], [5,0], [7,0]]} ); 
-    } 
-);
-
-// disable headers
 $(document).ready(function() { 
+    $("#myTable").tablesorter( {sortList: [[4,0], [5,0], [7,0]]} );
     $("table").tablesorter({ 
-        // pass the headers argument and assing a object 
+    // pass the headers argument and assing a object 
         headers: { 
-        	   0: { 
+            0: { 
                 // disable it by setting the property sorter to false 
                 sorter: false 
             }, 
@@ -74,7 +61,7 @@ $(document).ready(function() {
                 // disable it by setting the property sorter to false 
                 sorter: false 
             },
-				6: { 
+                6: { 
                 // disable it by setting the property sorter to false 
                 sorter: false 
             }, 

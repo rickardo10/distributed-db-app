@@ -1,0 +1,20 @@
+<form id="send" action="guardarasistente" method="post">
+	<p>
+		<label for="nombre">Nombre:</label>
+		<input type="text" name="nombre" id="nombre" minlength="10" placeholder="Nombre" required/>
+	</p>
+	<p>
+		<label for="email">E-mail:</label>
+		<input type="email" name="email" id="email" placeholder="E-mail" required/>
+	</p>
+	<p>
+		<label for="telefono">Teléfono:</label>
+		<input type="textarea" name="telefono" id="telefono" placeholder="Teléfono"/>
+	</p>
+	<p>
+		<button class="btn btn-primary" type="submit">Guardar</button>
+	</p>
+</form>
+<script>
+	$("#send").validate();
+</script>

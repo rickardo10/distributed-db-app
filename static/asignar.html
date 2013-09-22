@@ -1,0 +1,40 @@
+<form id="asignacion" action="tareasignada" method="post" class="pure-form" >
+	<p>
+		<label for="asignador">Asignado por:</label>
+		<select name = "investigador" id = "invest" onchange="onChangeSetVar()" required>
+			%s
+		</select>
+	</p>
+<p>
+  	<label for="asignador">Proyecto:</label>
+  	<select name = "workingpaper" required>
+     	<option selected value="">-Working Paper-</option>
+     	%s
+  	</select>
+</p>
+<p>
+   <label for="asignacion">Asignar a:</label>
+   <select name = "asistente" required>
+   	<option selected value="">-Asistente-</option>
+  	%s
+  	</select>
+	</p>
+	<p>
+  	<label for="descripcion">Descripción de la Asignación:</label></dt>
+   <input type="text" name="descripcion" placeholder="Descripción de la asignación" required/>
+	</p>
+	<p>
+  	<label for="prioridad">Prioridad:</label>
+  	<select name = "prioridad">
+      <option value = "1">Alta</option>
+     	<option value = "2">Media</option>
+    	<option selected value = "3">Baja</option>
+ 	</select>
+	</p>
+	<p>
+		<button class="btn btn-primary" type="submit">Guardar</button>
+</p>
+</form>
+<script>
+	$("#asignacion").validate();
+</script>

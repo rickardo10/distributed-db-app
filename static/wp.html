@@ -1,0 +1,19 @@
+<form id="asignacion" action="guardarwp" method="post">
+	<p>
+		<label for="workingpaper">Nombre del proyecto:</label>
+		<input type="text" name="nombre" id="nombre" placeholder ="Nombre del proyecto" required/>
+	</p>
+	<p>
+		<label for="autor">Autor del proyecto:</label>
+		<select name = "investigador" required>
+			<option value="" selected>-Investigador</option>
+			%s
+		</select>
+	</p>
+	<p>
+		<button class="btn btn-primary" type="submit">Guardar</button> 
+	<p>
+</form>
+<script>
+	$("#asignacion").validate();
+</script>

@@ -6,149 +6,12 @@ import datetime
 import os
 from pytz import timezone
 
-_header = """
-<html>
-<head>
-<title>Investigador</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" media="all" href="style.css" />
-<script type="application/javascript" src="some.js"></script>
-</head>
-<body>
-	<div class="pure-menu pure-menu-open">
-		<a href="/" class="pure-menu-heading">Menu</a>
-		<ul>
-			<li><a href = "/investigador">Añadir investigador</a></li>
-			<li><a href = "/asistente">Añadir asistente</a></li>
-			<li><a href = "/workingpaper">Crear nuevo working paper</a></li>
-			<li><a href = "/asignartarea">Asignar nueva tarea</a></li>
-			<li class="pure-menu-heading">Tablas</li>
-			<li><a href = "/asiglist">Lista de asignaciones</a></li>
-		</ul>
-	</div>
-	<div id = "signup-form">
-		<div id = "signup-form-inner">
-			<div class="clearfix" id="header">
-				<h1>%s</h1>
-			</div>
-"""
-
-_investigador = """
-			<form id="send" action="guardarinvestigador" method="post">
-				<p>
-					<label for="nombre">Nombre:</label>	
-					<input type="text" name="nombre" id="nombre" minlength="10" placeholder="Nombre" required/>
-				</p>
-				<p>
-					<label for="email">E-mail:</label>
-					<input type="email" name="email" id="email" placeholder="E-mail" required/>
-				</p>
-				<p>
-					<button class="btn btn-primary" type="submit">Guardar</button>
-				</p>
-			</form>
-			<script>
-			$("#send").validate();
-			</script>
-"""
-
-_asistente = """
-			<form id="send" action="guardarasistente" method="post">
-				<p>
-					<label for="nombre">Nombre:</label>
-					<input type="text" name="nombre" id="nombre" minlength="10" placeholder="Nombre" required/>
-				</p>
-				<p>
-					<label for="email">E-mail:</label>
-					<input type="email" name="email" id="email" placeholder="E-mail" required/>
-				</p>
-				<p>
-					<label for="telefono">Teléfono:</label>
-					<input type="textarea" name="telefono" id="telefono" placeholder="Teléfono"/>
-				</p>
-				<p>
-					<button class="btn btn-primary" type="submit">Guardar</button>
-				</p>
-			</form>
-			<script>
-				$("#send").validate();
-			</script>
-"""
-
-_asignar = """
-			<form id="asignacion" action="tareasignada" method="post" class="pure-form" >
-				<p>
-					<label for="asignador">Asignado por:</label>
-					<select name = "investigador" id = "invest" onchange="onChangeSetVar()" required>
-						%s
-					</select>
-				</p>
-			<p>
-	        	<label for="asignador">Proyecto:</label>
-	        	<select name = "workingpaper" required>
-		        	<option selected value="">-Working Paper-</option>
-		        	%s
-	        	</select>
-         </p>
-         <p>
-	         <label for="asignacion">Asignar a:</label>
-	         <select name = "asistente" required>
-	         	<option selected value="">-Asistente-</option>
-	        	%s
-	        	</select>
-        	</p>
-        	<p>
-	        	<label for="descripcion">Descripción de la Asignación:</label></dt>
-	         <input type="text" name="descripcion" placeholder="Descripción de la asignación" required/>
-        	</p>
-        	<p>
-	        	<label for="prioridad">Prioridad:</label>
-	        	<select name = "prioridad">
-		         <option value = "1">Alta</option>
-		        	<option value = "2">Media</option>
-		       	<option selected value = "3">Baja</option>
-	       	</select>
-        	</p>
-        	<p>
-        		<button class="btn btn-primary" type="submit">Guardar</button>
-			</p>
-			</form>
-			<script>
-				$("#asignacion").validate();
-			</script>
-"""
-
-_wp = """
-			<form id="asignacion" action="guardarwp" method="post">
-				<p>
-					<label for="workingpaper">Nombre del proyecto:</label>
-					<input type="text" name="nombre" id="nombre" placeholder ="Nombre del proyecto" required/>
-				</p>
-				<p>
-					<label for="autor">Autor del proyecto:</label>
-					<select name = "investigador" required>
-						<option value="" selected>-Investigador</option>
-					%s
-					</select>
-				</p>
-				<p>
-					<button class="btn btn-primary" type="submit">Guardar</button> 
-				<p>
-				</form>
-				<script>
-					$("#asignacion").validate();
-				</script>
-"""
-
-_footer = """
-		<div id="required">
-			<p>&copy;Autor: Ricardo Ocampo<br/>
-			Last update: 15 Septiembre 2013</p>
-		</div>
-	</div>
-</body>
-</html>
-"""
+_header = open("static/header.html").read()
+_investigador = open("static/investigador.html").read()
+_asistente = open("static/asistente.html").read()
+_asignar = open("static/asignar.html").read()
+_wp = open("static/wp.html").read()
+_footer = open("static/footer.html").read() 
 
 class HelloWorld(object):
 	# Main page
@@ -275,54 +138,12 @@ class HelloWorld(object):
 
 	# Displays the list of assignments
 	def asiglist( self, row = 0 ):
-		row = int( row )
-		_header = """
-		<html>
-		<head>
-		<title>Investigador</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" type="text/css" media="all" href="style.css" />
-		<script type="text/javascript" src="jquery-latest.js"></script>
-		<script type="application/javascript" src="jquery.validate.js"></script>
-		<script type="text/javascript" src="jquery.tablesorter.js"></script> 
-		<script type="application/javascript" src="some.js"></script>
-		</head>
-		<body>
-			<div id = "signup-form-inner">
-				<div class="clearfix" id="header">
-					<h1>%s</h1>
-				</div>
-		"""
-		_body = """
-		<body>
-			<table id="myTable" class="table table-striped tablesorter">
-				<thead>
-					<tr>
-						<th>Autor</th>
-						<th>Working Paper</th>
-						<th>Asignado</th>
-						<th>Descripción</th>
-						<th>Estado</th>
-						<th>Prioridad</th>
-						<th>Avance</th>
-						<th>Fecha de Inicio</th>
-						<th>Fecha de Culminación</th>
-						<th>Comentarios</th>
-						<th>Editar</th>
-					</tr>
-				</thead>
-				<tbody>
-					%s
-				</tbody>
-			</table>
-		"""
 
-		_row = """
-		<td>%s</td> 
-		"""
+		_table = open("static/table.html").read()
+		row = int( row )
+		_row = '<td>%s</td>' 
 
 		database = db.database( "basedatosCAP.db" )
-
 
 		asignaciones1 = database.getAsignments( 1 )
 		asignaciones2 = database.getAsignments( 2 )
@@ -410,7 +231,8 @@ class HelloWorld(object):
 			else:
 				rows = rows + _lineToEdit
 
-		return [_header % ("Lista de asignaciones"), _body % (rows), "<div><a href = '/'>Regresar</a></div> " ,_footer ]
+		_table = _table % ("Lista de asignaciones", rows )
+		return [_table, "<div><a href = '/'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
 
 	def borrarlinea( self, row ):
@@ -435,25 +257,21 @@ class HelloWorld(object):
 # Starts the webpage
 if __name__ == '__main__':
 	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
 	cherrypy.config.update(http_conf)
 
-	conf = {'/style.css':{'tools.staticfile.on':True, 
-			  					 'tools.staticfile.filename':current_dir+"/style.css"},
-			  '/some.js':{'tools.staticfile.on':True,
-			  				  'tools.staticfile.filename':current_dir+"/some.js"},
-			  '/jquery.tablesorter.js':{'tools.staticfile.on':True,
-			  				  'tools.staticfile.filename':current_dir+"/jquery.tablesorter.js"},
-			  '/jquery-latest.js':{'tools.staticfile.on':True,
-			  				  'tools.staticfile.filename':current_dir+"/jquery-latest.js"},
-			  '/jquery.validate.js':{'tools.staticfile.on':True,
-			  				  'tools.staticfile.filename':current_dir+"/jquery.validate.js"}}
+	conf = {'/css':{'tools.staticdir.on':True, 
+			  			 'tools.staticdir.dir': os.path.join(current_dir, 'css')},
+			  '/js':{'tools.staticdir.on':True,
+			  			'tools.staticdir.dir': os.path.join(current_dir, 'js')},
+			  '/static':{'tools.staticdir.on':True,
+			  				 'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
 	
 
 	cherrypy.quickstart( HelloWorld(), "/", config = conf )
