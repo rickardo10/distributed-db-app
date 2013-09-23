@@ -135,7 +135,7 @@ if __name__ == '__main__':
 			  				 'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
 	hello = HelloWorld()
 
-	cherrypy.tree.mount( hello.restricted, config = conf)
+	cherrypy.tree.mount( hello.restricted, '/restricted' ,config = conf)
 	cherrypy.quickstart( hello, "/", config = conf )
 
 #=========================================================================================
