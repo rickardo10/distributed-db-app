@@ -5,6 +5,16 @@
 * 29/08/2011
 */
 
+#admin{
+  float:right;
+}
+
+#justificacion{
+  height: 100px;
+  width:400px;
+  font-size: 14px;
+}
+
 #investigador{
   float: left;
 }

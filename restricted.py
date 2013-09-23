@@ -46,19 +46,19 @@ class RestrictedArea:
 	def guardarinvestigador( self, nombre, email ):
 		_salvado = """
 			<p>Investigador correctamente salvado<p>
-			<p> <a href = "/">Regresar</a>
+			<p> <a href = "/restricted">Regresar</a>
 		"""
 		database = db.database( "basedatosCAP.db" )
 		query = "insert into investigador(nombre, email) values ( '%s', '%s' )" % ( nombre, email )
 		results = database.insertData( query )
-		return [ _header_Admin % (""), _salvado, _footer ]
+		return [ _header_Admin % globals(), _salvado, _footer ]
 	guardarinvestigador.exposed = True
 
 	# Page that pops when a research assistant is succesfully saved
 	def guardarasistente( self, nombre, email, telefono ):
 		_salvado = """
 			<p>Asistente correctamente salvado<p>
-			<p> <a href = "/">Regresar</a>
+			<p> <a href = "/restricted">Regresar</a>
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )
@@ -85,13 +85,9 @@ class RestrictedArea:
 		row = int( row )
 		_row = '<td>%s</td>' 
 
+		# get list with AsigIds
 		database = db.database( "basedatosCAP.db" )
-
-		asignaciones1 = database.getAsignments( 1 )
-		asignaciones2 = database.getAsignments( 2 )
-		asignaciones3 = database.getAsignments( 3 )
-		asignaciones4 = database.getAsignments( 4 )
-		asignaciones = asignaciones1 + asignaciones2 + asignaciones3 + asignaciones4
+		asignaciones = database.getIds("asignaciones")
 
 		rows = ""
 		if row != 0: data = database.getDataFromAsigId( row )
@@ -232,17 +228,17 @@ class RestrictedArea:
 	workingpaper.exposed = True
 
 	# Page that pops when a task is succesfully assinged
-	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
+	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador, justificacion ):
 		_salvado = """
 			<p>Tarea correctamente asignada<p>
-			<p> <a href = "/">Regresar</a>
+			<p> <a href = "/restricted">Regresar</a>
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )
 		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%b %d, %Y %H:%M %p")
 
 		# Inserts a row with the new task
-		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, prioridad, time )
+		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, '3', time )
 		results = database.insertData( query )
 		query1 = "insert into linkasignaciones(asid, asigid, wpid ) values ( %d, %d, %d )" % ( int( asistente ), database.getIdAsig( descripcion ) , int( workingpaper ) )
 		results1 = database.insertData( query1 )
@@ -254,7 +250,7 @@ class RestrictedArea:
 	def guardarwp( self, nombre, investigador ):
 		_salvado = """
 			<p>Working paper correctamente creado<p>
-			<p> <a href = "/">Regresar</a>
+			<p> <a href = "/restricted">Regresar</a>
 		"""
 		# Initializes an object of the database
 		database = db.database( "basedatosCAP.db" )

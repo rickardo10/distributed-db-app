@@ -14,7 +14,7 @@ _asistente = open("static/asistente.html").read()
 _asignar = open("static/asignar.html").read()
 _wp = open("static/wp.html").read()
 _footer = open("static/footer.html").read() 
-
+	
 class HelloWorld(object):
 
 	_cp_config={
@@ -79,7 +79,7 @@ class HelloWorld(object):
 
 	# Page that pops when a task is succesfully assinged
 	@require()
-	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
+	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador, justificacion ):
 		_salvado = """
 			<p>Tarea correctamente asignada<p>
 			<p> <a href = "/">Regresar</a>
@@ -89,7 +89,7 @@ class HelloWorld(object):
 		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%b %d, %Y %H:%M %p")
 
 		# Inserts a row with the new task
-		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, prioridad, time )
+		query = "insert into asignaciones(descripcion, prioridad, fechaini ) values ( '%s', '%s', '%s' )" % ( descripcion, '3', time )
 		results = database.insertData( query )
 		query1 = "insert into linkasignaciones(asid, asigid, wpid ) values ( %d, %d, %d )" % ( int( asistente ), database.getIdAsig( descripcion ) , int( workingpaper ) )
 		results1 = database.insertData( query1 )
@@ -117,10 +117,10 @@ class HelloWorld(object):
 
 # Starts the webpage
 if __name__ == '__main__':
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
