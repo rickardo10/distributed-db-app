@@ -9,11 +9,14 @@
 	<div class="pure-menu pure-menu-open">
 		<a href="/" class="pure-menu-heading">Menu</a>
 		<ul>
-			<li><a href = "/workingpaper">Crear nuevo working paper</a></li>
-			<li><a href = "/asignartarea">Asignar nueva tarea</a></li>
+			<li><a href = "/restricted/investigador">Añadir investigador</a></li>
+			<li><a href = "/restricted/asistente">Añadir asistente</a></li>
+			<li><a href = "/restricted/workingpaper">Crear nuevo working paper</a></li>
+			<li><a href = "/restricted/asignartarea">Asignar nueva tarea</a></li>
+			<li class="pure-menu-heading">Tablas</li>
+			<li><a href = "/restricted/asiglist">Lista de asignaciones</a></li>
+			<li class="pure-menu-heading"><a href="/auth/logout">Logout</a></li>
 		</ul>
-		<a class="pure-menu-heading" href="/restricted">Administrador</a>
-		<a class="pure-menu-heading" href="/auth/logout">Logout</a>
 	</div>
 	<div id = "signup-form">
 		<div id = "signup-form-inner">

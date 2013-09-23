@@ -5,6 +5,8 @@ import database as db
 import datetime
 import os
 from pytz import timezone
+from auth import AuthController, require, member_of, name_is
+from restricted import RestrictedArea
 
 _header = open("static/header.html").read()
 _investigador = open("static/investigador.html").read()
@@ -14,22 +16,26 @@ _wp = open("static/wp.html").read()
 _footer = open("static/footer.html").read() 
 
 class HelloWorld(object):
+
+	_cp_config={
+		'tools.sessions.on': True,
+		'tools.auth.on': True
+	}
+
+	# Forces to log in first
+	auth = AuthController()
+
+	# Creates a page that is only for administrator
+	restricted = RestrictedArea()
+	
 	# Main page
+	@require()
 	def index( self ):
 		return [ _header % ("Menú principal"), _footer ]
 	index.exposed = True
 
-	# Researchers page
-	def investigador( self ):
-		return [ _header % ("Añadir investigador"), _investigador, _footer ]
-	investigador.exposed = True
-
-	# Research assistants page
-	def asistente( self ):
-		return [ _header % ("Añadir asistente"), _asistente, _footer ]
-	asistente.exposed = True
-
 	# Tasking
+	@require()
 	def asignartarea( self, investigador = "0" ):
 		database = db.database( "basedatosCAP.db" )
 		investigadores = database.getNames( "investigador" )
@@ -60,6 +66,7 @@ class HelloWorld(object):
 	asignartarea.exposed = True
 
 	# Working papers page
+	@require()
 	def workingpaper( self ):
 		database = db.database( "basedatosCAP.db" )
 		investigadores = database.getNames( "investigador" )
@@ -70,37 +77,8 @@ class HelloWorld(object):
 		return [_header % ("Crear nuevo working paper"), _wp % _inv, _footer ]
 	workingpaper.exposed = True
 
-	# Page that pops when a researcher is succesfully saved
-	def guardarinvestigador( self, nombre, email ):
-		_salvado = """
-			<p>Investigador correctamente salvado<p>
-			<p> <a href = "/">Regresar</a>
-		"""
-		database = db.database( "basedatosCAP.db" )
-		query = "insert into investigador(nombre, email) values ( '%s', '%s' )" % ( nombre, email )
-		results = database.insertData( query )
-		return [ _header % (""), _salvado, _footer ]
-	guardarinvestigador.exposed = True
-
-	# Page that pops when a research assistant is succesfully saved
-	def guardarasistente( self, nombre, email, telefono ):
-		_salvado = """
-			<p>Asistente correctamente salvado<p>
-			<p> <a href = "/">Regresar</a>
-		"""
-		# Initializes an object of the database
-		database = db.database( "basedatosCAP.db" )
-		asistentes = database.getNames("asistente")
-		if nombre in asistentes:
-			return [_header % (""), _asistente, "El asistente ya existe" , _footer] 
-
-		# Inserts a row with the new assistant
-		query = "insert into asistente(nombre, email, telefono) values ( '%s', '%s', '%s' )" % ( nombre, email, telefono )
-		results = database.insertData( query )
-		return [ _header % (""), _salvado, _footer ]
-	guardarasistente.exposed = True
-
 	# Page that pops when a task is succesfully assinged
+	@require()
 	def tareasignada( self, workingpaper, asistente, prioridad, descripcion, investigador ):
 		_salvado = """
 			<p>Tarea correctamente asignada<p>
@@ -120,6 +98,7 @@ class HelloWorld(object):
 
 
 	# Page that pops when a working paper is succesfully created
+	@require()
 	def guardarwp( self, nombre, investigador ):
 		_salvado = """
 			<p>Working paper correctamente creado<p>
@@ -136,127 +115,8 @@ class HelloWorld(object):
 		return [ _header % (""), _salvado, _footer ]
 	guardarwp.exposed = True
 
-	# Displays the list of assignments
-	def asiglist( self, row = 0 ):
-
-		_table = open("static/table.html").read()
-		row = int( row )
-		_row = '<td>%s</td>' 
-
-		database = db.database( "basedatosCAP.db" )
-
-		asignaciones1 = database.getAsignments( 1 )
-		asignaciones2 = database.getAsignments( 2 )
-		asignaciones3 = database.getAsignments( 3 )
-		asignaciones4 = database.getAsignments( 4 )
-		asignaciones = asignaciones1 + asignaciones2 + asignaciones3 + asignaciones4
-
-		rows = ""
-		if row != 0: data = database.getDataFromAsigId( row )
-		_prioridad = """
-				<select id="prioridad" name = "prioridad">
-		         <option %s value = "1">Alta</option>
-		        	<option %s value = "2">Media</option>
-		       	<option %s value = "3">Baja</option>
-	       	</select>
-	   """
-		prioridades = [ "1", "2", "3"] 
-
-		_avance = """
-				<select id="avance" name = "avance">
-		         <option %s value = "10%%">10%%</option>
-		        	<option %s value = "20%%">20%%</option>
-		       	<option %s value = "30%%">30%%</option>
-		       	<option %s value = "40%%">40%%</option>
-		        	<option %s value = "50%%">50%%</option>
-		       	<option %s value = "60%%">60%%</option>
-		       	<option %s value = "70%%">70%%</option>
-		        	<option %s value = "80%%">80%%</option>
-		       	<option %s value = "90%%">90%%</option>
-	       	</select>
-	   """
-		avances = ["10%%", "20%%", "30%%", "40%%", "50%%", "60%%", "70%%", "80%%", "90%%"]
-
-		_estado = """
-				<select id = "estado" name = "estado" >
-					<option %s value = "En proceso">En proceso</option>
-					<option %s value = "Pausado">Pausado</option>
-					<option %s value = "Terminado">Terminado</option>
-				</select>
-		"""
-		estados = ["En proceso", "Pausado", "Terminado"]
-
-		_asignado = """
-				<select id = "asignado" name = "asistente" >
-	        	%s
-	        	</select>
-	   """
-
-		_asist = ""
-		asistentes = database.getNames( "asistente" )
-	   # Creates a list with all the assistants
-		if row != 0:
-			for x in asistentes:
-				if x == database.getAsFromAsigId( row ):
-					s = 'selected'
-				else:
-					s = ''
-				_asist = _asist + """<option %s value = "%d"> %s</option>\n""" % ( s, database.getId( "asistente", x), x ) 
-
-
-			_lineToEdit = "<tr>" + (_row % ( database.getAuthorFromAsigId( row ) ) + 
-												  _row % ( database.getWPFromAsigId( row ) ) + 
-												  _row % ( _asignado % _asist  ) + 
-												  _row % ( data[0] ) + 
-												  _row % ( _estado % tuple([ "selected" if x == data[1] else "" for x in estados])) + 
-												  _row % ( _prioridad % tuple([ "selected" if x == data[2] else "" for x in prioridades])) + 
-												  _row % ( _avance % tuple([ "selected" if x == data[3] else "" for x in avances]) ) + 
-												  _row % ( data[4] ) + 
-												  _row % ( data[5] ) +  
-												  _row % ( "<textarea id='comment'>" + str(data[6]) +"</textarea>" ) + 
-												  _row % (( """<p><button onclick='guardar(%d)' class='btn btn-primary btn-mini'>Guardar</button></p>""" ) % ( row )  +
-																"""<button onclick='terminado(%d)' class='btn btn-primary btn-mini'>Terminado</button>""" % ( row ) ) +
-											"</tr>" )
-
-		for x in asignaciones:
-			if x != row:			
-				data = database.getDataFromAsigId( x )
-				rows = rows + "<tr>" + ( _row % ( database.getAuthorFromAsigId( x ) ) +
-										_row % ( database.getWPFromAsigId( x ) ) +
-										_row % ( database.getAsFromAsigId( x ) ) +
-										'\n'.join( [ _row % ( y ) for y in data ] ) +
-										_row % (( """<p><button onclick='editrow(%d)' class='btn btn-primary btn-mini'>Editar</button></p>""" ) % ( x ) +
-											  """<button onclick='deleterow(%d)' class='btn btn-primary btn-mini'>Borrar</button>""" % ( x ) ) +
-											  "</tr>")
-			else:
-				rows = rows + _lineToEdit
-
-		_table = _table % ("Lista de asignaciones", rows )
-		return [_table, "<div><a href = '/'>Regresar</a></div> " ,_footer ]
-	asiglist.exposed = True
-
-	def borrarlinea( self, row ):
-		database = db.database("basedatosCAP.db")
-		database.deleteRow( int(row) )
-		raise cherrypy.HTTPRedirect("/asiglist")
-	borrarlinea.exposed = True
-
-	def updaterow( self, row, asignado, estado, prioridad, avance, comentarios ):
-		database = db.database("basedatosCAP.db")
-		database.updateRow( int(row), int(asignado), estado, prioridad, avance, comentarios )
-		raise cherrypy.HTTPRedirect("/asiglist")
-	updaterow.exposed = True
-
-	def terminado( self, row ):
-		database = db.database("basedatosCAP.db")
-		time = datetime.datetime.now(timezone('Mexico/General')).strftime("%b %d, %Y %H:%M %p")
-		database.insertData("update asignaciones set fechafin = '%s' where rowid = %d" % (time, int(row) ) )
-		raise cherrypy.HTTPRedirect("/asiglist")
-	terminado.exposed = True
-
 # Starts the webpage
 if __name__ == '__main__':
-	current_dir = os.path.dirname( os.path.abspath(__file__) )
 	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
 	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
 	port = 8000
@@ -266,6 +126,7 @@ if __name__ == '__main__':
 									'server.socket_host': ip}}
 	cherrypy.config.update(http_conf)
 
+	current_dir = os.path.dirname( os.path.abspath(__file__) )
 	conf = {'/css':{'tools.staticdir.on':True, 
 			  			 'tools.staticdir.dir': os.path.join(current_dir, 'css')},
 			  '/js':{'tools.staticdir.on':True,
@@ -273,7 +134,7 @@ if __name__ == '__main__':
 			  '/static':{'tools.staticdir.on':True,
 			  				 'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
 	
-
+	cherrypy.tree.mount( RestrictedArea(), '/', config = conf)
 	cherrypy.quickstart( HelloWorld(), "/", config = conf )
 
 #=========================================================================================

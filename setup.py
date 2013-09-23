@@ -1,8 +1,8 @@
 from setuptools import setup
 
-setup(name='YourAppName', version='1.0',
+setup(name='taskgda', version='1.0',
       description='OpenShift Python-3.3 Community Cartridge based application',
-      author='Your Name', author_email='ramr@example.org',
+      author='Ricardo Ocampo', author_email='r.ocampo@itesm.mx',
       url='http://www.python.org/sigs/distutils-sig/',
 
       #  Uncomment one or more lines below in the install_requires section

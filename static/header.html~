@@ -12,7 +12,7 @@
 			<li><a href = "/workingpaper">Crear nuevo working paper</a></li>
 			<li><a href = "/asignartarea">Asignar nueva tarea</a></li>
 		</ul>
-		<a class="pure-menu-heading" href="/restricted">Administrador</a>
+		<a class="pure-menu-heading" href="restricted">Administrador</a>
 		<a class="pure-menu-heading" href="/auth/logout">Logout</a>
 	</div>
 	<div id = "signup-form">
