@@ -126,10 +126,10 @@ class HelloWorld(object):
 
 # Starts the webpage
 if __name__ == '__main__':
-	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	port = 8000
-	ip = "127.0.0.1"
+	ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	#port = 8000
+	#ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
