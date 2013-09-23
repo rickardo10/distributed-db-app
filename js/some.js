@@ -30,6 +30,7 @@ function terminado( row ){
 // sets initial sort
 $(document).ready(function() { 
     $("#myTable").tablesorter( {sortList: [[4,0], [5,0], [7,0]]} );
+    $("#myTable").tableFilter();
     $("table").tablesorter({ 
     // pass the headers argument and assing a object 
         headers: { 

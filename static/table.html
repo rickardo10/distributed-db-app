@@ -2,26 +2,37 @@
 <head>
 <title>Investigador</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
-<script type="text/javascript" src="js/jquery-latest.js"></script>
-<script type="text/javascript" src="js/jquery.tablesorter.js"></script> 
-<script type="application/javascript" src="js/some.js"></script>
+<style type="text/css">
+    %(style)s
+</style>
+<script type="text/javascript">
+    %(jquery)s
+</script>
+<script type="text/javascript">
+    %(sorter)s
+</script>     
+<script type="application/javascript">
+    %(filt)s
+</script>
+<script type="application/javascript">
+    %(some)s
+</script>
 </head>
 <body>
-	<div id = "sisgnup-form-inner">
+	<div id = "signup-form-inner">
 		<div class="clearfix" id="header">
-			<h1>%s</h1>
+			<h1>%(name)s</h1>
 		</div>
-<body>
+	</div>
 	<table id="myTable" class="table table-striped tablesorter">
 		<thead>
 			<tr>
-				<th>Autor</th>
-				<th>Working Paper</th>
-				<th>Asignado</th>
+				<th filter-type='ddl'>Autor</th>
+				<th filter-type='ddl'>Working Paper</th>
+				<th filter-type='ddl'>Asignado</th>
 				<th>Descripción</th>
-				<th>Estado</th>
-				<th>Prioridad</th>
+				<th filter-type='ddl'>Estado</th>
+				<th filter-type='ddl'>Prioridad</th>
 				<th>Avance</th>
 				<th>Fecha de Inicio</th>
 				<th>Fecha de Culminación</th>
@@ -30,6 +41,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			%s
+			%(rows)s
 		</tbody>
 	</table>
+</body>
+
+<script language="javascript" type="text/javascript">  
+//<![CDATA[  
+    var table10_Props = {  
+						col_0:'select'
+                };  
+    var tf10 = setFilterGrid( "myTable",table10_Props );  
+//]]>  
+</script> 

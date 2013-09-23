@@ -15,6 +15,7 @@ _wp = open("static/wp.html").read()
 _footer = open("static/footer.html").read()
 _style = open("css/style.css").read()
 _script = open("js/some.js").read()
+_filter = open("js/picnet.table.filter.min.js").read()
 name = ""
 
 class RestrictedArea:
@@ -73,8 +74,14 @@ class RestrictedArea:
 
 	# Displays the list of assignments
 	def asiglist( self, row = 0 ):
-
 		_table = open("static/table.html").read()
+		style = open("css/style.css").read()
+		jquery = open("js/jquery-latest.js").read()
+		sorter = open("js/jquery.tablesorter.js").read()
+		some = open("js/some.js").read()
+		filt = open("js/picnet.table.filter.min.js").read()
+		name = "Tabla de asignaciones"
+
 		row = int( row )
 		_row = '<td>%s</td>' 
 
@@ -165,8 +172,7 @@ class RestrictedArea:
 			else:
 				rows = rows + _lineToEdit
 
-		_table = _table % ("Lista de asignaciones", rows )
-		return [_table, "<div><a href = '/restricted'>Regresar</a></div> " ,_footer ]
+		return [_table % locals(), "<div><a href = '/restricted'>Regresar</a></div> " ,_footer ]
 	asiglist.exposed = True
 
 	def updaterow( self, row, asignado, estado, prioridad, avance, comentarios ):
