@@ -117,10 +117,10 @@ class HelloWorld(object):
 
 # Starts the webpage
 if __name__ == '__main__':
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 			  				 'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
 	hello = HelloWorld()
 
-	cherrypy.tree.mount( hello.restricted, '/restricted1' ,config = conf)
+	cherrypy.tree.mount( hello.restricted ,config = conf)
 	cherrypy.quickstart( hello, "/", config = conf )
 
 #=========================================================================================
