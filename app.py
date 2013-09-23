@@ -25,17 +25,8 @@ class HelloWorld(object):
 	# Forces to log in first
 	auth = AuthController()
 
-	current_dir = os.path.dirname( os.path.abspath(__file__) )
-	conf = {'/css':{'tools.staticdir.on':True, 
-		  			 'tools.staticdir.dir': os.path.join(current_dir, 'css')},
-		  '/js':{'tools.staticdir.on':True,
-		  			'tools.staticdir.dir': os.path.join(current_dir, 'js')},
-		  '/static':{'tools.staticdir.on':True,
-		  				 'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
-	
 	# Creates a page that is only for administrator
 	restricted = RestrictedArea()
-	cherrypy.tree.mount( restricted, config = conf)
 	
 	# Main page
 	@require()
@@ -126,10 +117,10 @@ class HelloWorld(object):
 
 # Starts the webpage
 if __name__ == '__main__':
-	ip   = os.environ['OPENSHIFT_PYTHON_IP']
-	port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
-	#port = 8000
-	#ip = "127.0.0.1"
+	#ip   = os.environ['OPENSHIFT_PYTHON_IP']
+	#port = int(os.environ['OPENSHIFT_PYTHON_PORT'])
+	port = 8000
+	ip = "127.0.0.1"
 
 	http_conf = {'global': {'server.socket_port': port,
 									'server.socket_host': ip}}

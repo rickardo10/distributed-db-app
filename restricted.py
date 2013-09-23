@@ -12,8 +12,10 @@ _investigador = open("static/investigador.html").read()
 _asistente = open("static/asistente.html").read()
 _asignar = open("static/asignar.html").read()
 _wp = open("static/wp.html").read()
-_footer = open("static/footer.html").read() 
-
+_footer = open("static/footer.html").read()
+_style = open("css/style.css").read()
+_script = open("js/some.js").read()
+name = ""
 
 class RestrictedArea:
 	# all methods in this controller (and subcontrollers) is
@@ -23,17 +25,20 @@ class RestrictedArea:
 	}
 
 	def index(self):
-		return [ _header_Admin % ("Menú principal administrador"), _footer]
+		globals()["name"] = "Menú principal administrador"
+		return [ _header_Admin % globals(), _footer]
 	index.exposed = True
 
    # Researchers page
 	def investigador( self ):
-		return [ _header_Admin % ("Añadir investigador"), _investigador, _footer ]
+		globals()["name"] = "Añadir investigador"
+		return [ _header_Admin % globals(), _investigador, _footer ]
 	investigador.exposed = True
 
 	# Research assistants page
 	def asistente( self ):
-		return [ _header_Admin % ("Añadir asistente"), _asistente, _footer ]
+		globals()["name"] = "Añadir asistente"
+		return [ _header_Admin % globals(), _asistente, _footer ]
 	asistente.exposed = True
 
 	# Page that pops when a researcher is succesfully saved
@@ -58,12 +63,12 @@ class RestrictedArea:
 		database = db.database( "basedatosCAP.db" )
 		asistentes = database.getNames("asistente")
 		if nombre in asistentes:
-			return [_header_Admin % (""), _asistente, "El asistente ya existe" , _footer] 
+			return [_header_Admin % globals(), _asistente, "El asistente ya existe" , _footer] 
 
 		# Inserts a row with the new assistant
 		query = "insert into asistente(nombre, email, telefono) values ( '%s', '%s', '%s' )" % ( nombre, email, telefono )
 		results = database.insertData( query )
-		return [ _header_Admin % (""), _salvado, _footer ]
+		return [ _header_Admin % globals(), _salvado, _footer ]
 	guardarasistente.exposed = True
 
 	# Displays the list of assignments
@@ -204,7 +209,8 @@ class RestrictedArea:
 		for x in proyectos:
 			_proy = _proy + """<option value = %d>%s</option>\n""" % ( database.getIdWP(x), x ) 	
 
-		return [ _header_Admin % ("Asignar tarea"), _asignar % (_inv, _proy, _asist ), _footer ]
+		globals()["name"] = "Asignar tarea"
+		return [ _header_Admin % globals(), _asignar % (_inv, _proy, _asist ), _footer ]
 	asignartarea.exposed = True
 
 	# Working papers page
@@ -215,7 +221,8 @@ class RestrictedArea:
 		for x in investigadores:
 			_inv = _inv + """<option value = "%d"> %s</option>""" % ( database.getId( "investigador", x), x ) 
 		
-		return [_header_Admin % ("Crear nuevo working paper"), _wp % _inv, _footer ]
+		globals()["name"] = "Crear nuevo working paper"
+		return [_header_Admin % globals(), _wp % _inv, _footer ]
 	workingpaper.exposed = True
 
 	# Page that pops when a task is succesfully assinged
@@ -233,7 +240,7 @@ class RestrictedArea:
 		results = database.insertData( query )
 		query1 = "insert into linkasignaciones(asid, asigid, wpid ) values ( %d, %d, %d )" % ( int( asistente ), database.getIdAsig( descripcion ) , int( workingpaper ) )
 		results1 = database.insertData( query1 )
-		return [ _header_Admin % (""), _salvado, _footer ]
+		return [ _header_Admin % globals(), _salvado, _footer ]
 	tareasignada.exposed = True
 
 
@@ -251,5 +258,5 @@ class RestrictedArea:
 		results = database.insertData( query )
 		query1 = "insert into linkworkingpaper( invid, wpid ) values ( %d, %d )" % ( int( investigador ), database.getIdWP( nombre ))
 		results1 = database.insertData( query1 )
-		return [ _header_Admin % (""), _salvado, _footer ]
+		return [ _header_Admin % globals(), _salvado, _footer ]
 	guardarwp.exposed = True

@@ -3,7 +3,12 @@
 <title>Administrador Tareas Centro Asia Pacífico</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
-<script type="application/javascript" src="js/some.js"></script>
+<style type="text/css">
+    %(_style)s
+</style>
+<script type="application/javascript">
+    %(_script)s
+</script>
 </head>
 <body>
 	<div class="pure-menu pure-menu-open">
@@ -15,8 +20,8 @@
 			<li><a href = "/restricted/asignartarea">Asignar nueva tarea</a></li>
 			<li class="pure-menu-heading">Tablas</li>
 			<li><a href = "/restricted/asiglist">Lista de asignaciones</a></li>
-			<li class="pure-menu-heading"><a href="/auth/logout">Logout</a></li>
 		</ul>
+		<a class="pure-menu-heading" href="/auth/logout">Logout</a>
 	</div>
 	<div id = "signup-form">
 		<div id = "signup-form-inner">
