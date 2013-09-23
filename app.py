@@ -134,7 +134,7 @@ if __name__ == '__main__':
 			  '/static':{'tools.staticdir.on':True,
 			  				 'tools.staticdir.dir': os.path.join(current_dir, 'static')}}
 	
-	cherrypy.tree.mount( RestrictedArea(), '/restricted', config = conf)
+	cherrypy.tree.mount( RestrictedArea(), '/restricted1', config = conf)
 	cherrypy.quickstart( HelloWorld(), "/", config = conf )
 
 #=========================================================================================
