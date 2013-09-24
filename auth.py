@@ -12,7 +12,7 @@ def check_credentials(username, password):
     """Verifies credentials for username and password.
     Returns None on success or a string describing the error on failure"""
     # Adapt to your needs
-    if username in ('joe', 'steve') and password == 'secret':
+    if username in ('cap') and password == 'cap':
         return None
     else:
         return u"Nombre de usuario o contraseña incorrecto."
@@ -65,7 +65,7 @@ def require(*conditions):
 def member_of(groupname):
     def check():
         # replace with actual check if <username> is in <groupname>
-        return cherrypy.request.login == 'joe' and groupname == 'admin'
+        return cherrypy.request.login == 'cap' and groupname == 'admin'
     return check
 
 def name_is(reqd_username):
