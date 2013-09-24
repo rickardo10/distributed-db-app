@@ -7,7 +7,6 @@ import os
 from pytz import timezone
 from auth import AuthController, require, member_of, name_is
 from restricted import RestrictedArea
-import smtplib
 
 _header = open("static/header.html").read()
 _investigador = open("static/investigador.html").read()
@@ -94,15 +93,6 @@ class HelloWorld(object):
 		results = database.insertData( query )
 		query1 = "insert into linkasignaciones(asid, asigid, wpid ) values ( %d, %d, %d )" % ( int( asistente ), database.getIdAsig( descripcion ) , int( workingpaper ) )
 		results1 = database.insertData( query1 )
-		
-		msg = 
-
-		server = smtplib.SMTP('smtp.gmail.com', 587)
-		server.ehlo()
-		server.starttls()
-		server.ehlo()
-		server.login("r.ocampo.vega@gmail.com", "Raov892009")
-
 
 		return [ _header % (""), _salvado, _footer ]
 	tareasignada.exposed = True
