@@ -12,7 +12,7 @@ def check_credentials(username, password):
     """Verifies credentials for username and password.
     Returns None on success or a string describing the error on failure"""
     # Adapt to your needs
-    if username in ('cap') and password == 'cap':
+    if username in ('cap', 'investigador', 'asistente') and password == 'cap':
         return None
     else:
         return u"Nombre de usuario o contraseña incorrecto."
