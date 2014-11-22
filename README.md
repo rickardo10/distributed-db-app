@@ -4,7 +4,7 @@ Este repositorio contiene una aplicación que facilita la organización en deleg
 
 # Conocimientos previos
 
-# CherryPy
+## CherryPy
 
 CherryPy le permite a los desarrolladores construir aplicaciones web que aprovechan al 100% la programación en Python. Los resultados son menos código en menos tiempo.
 
