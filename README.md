@@ -22,14 +22,14 @@ Las características por la cual CherryPy fue elegido son:
 
 Para correr el presente código es necesario contar con python 3.1+ y las librerías de python CherryPy y pytz. Después de instalar python 3.1+ y las librerías correspondientes se debe clonar el repositorio e ingresar al folder.
 
-```
+```shell
 git clone https://github.com/rickardo10/distributed-db-app.git
 cd distributed-db-app
 ```
 
 Correr la aplicación de python `app.py`
 
-```
+```shell
 python app.py
 ```
 
